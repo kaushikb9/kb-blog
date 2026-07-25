@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KB's First US Trip — The Hidden Half</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf9f7;
+      --text: #1a1a1a;
+      --text-light: #666;
+      --accent: #c45c3e;
+      --accent-soft: #d4846a;
+      --card-bg: #ffffff;
+      --tag-outdoor: #4a7c59;
+      --tag-coffee: #8b6914;
+      --tag-bar: #6b4c7a;
+      --tag-arts: #c45c3e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: white;
+      padding: 80px 24px 60px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1600&auto=format&fit=crop&q=80') center/cover;
+      opacity: 0.25;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .hero .subtitle {
+      font-size: 1.15rem;
+      font-weight: 300;
+      opacity: 0.85;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    .hero .meta {
+      margin-top: 20px;
+      font-size: 0.85rem;
+      opacity: 0.6;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .city-section {
+      margin-bottom: 60px;
+    }
+    .city-header {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--text);
+    }
+    .city-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .city-header .emoji { font-size: 1.6rem; }
+    .city-header .duration {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    }
+    .card-image {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+    }
+    .card-body { padding: 22px 24px 20px; }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .card-location {
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+    .tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .tag.outdoor { background: #e8f5e9; color: var(--tag-outdoor); }
+    .tag.coffee { background: #fff8e1; color: var(--tag-coffee); }
+    .tag.bar { background: #f3e5f5; color: var(--tag-bar); }
+    .tag.arts { background: #fbe9e7; color: var(--tag-arts); }
+    .tag.vibe { background: #e3f2fd; color: #1565c0; }
+    .card-desc {
+      margin-top: 14px;
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+    .card-tip {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: #f5f5f0;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      color: var(--text);
+      border-left: 3px solid var(--accent-soft);
+    }
+    .card-tip strong { color: var(--accent); }
+    .sf-corridor {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-top: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sf-corridor::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://images.unsplash.com/photo-1449034446853-66c86144b0ad?w=800&auto=format&fit=crop&q=80') center/cover;
+      opacity: 0.2;
+    }
+    .sf-corridor > * { position: relative; z-index: 1; }
+    .sf-corridor h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+    .sf-corridor p {
+      font-size: 0.9rem;
+      opacity: 0.85;
+      line-height: 1.7;
+    }
+    .footer {
+      text-align: center;
+      padding: 50px 20px;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+    .footer .heart { color: var(--accent); }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2rem; }
+      .hero .subtitle { font-size: 1rem; }
+      .city-header h2 { font-size: 1.6rem; }
+      .card-image { height: 180px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-content">
+      <div class="meta">June 27 — July 17, 2026</div>
+      <h1>The Hidden Half</h1>
+      <p class="subtitle">After the postcards, the stadiums, and the must-sees — these are the moments that make a first trip to America unforgettable.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- NEW YORK -->
+    <div class="city-section">
+      <div class="city-header">
+        <span class="emoji">🗽</span>
+        <h2>New York</h2>
+        <span class="duration">JUN 27 — JUL 5</span>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=800&auto=format&fit=crop&q=80" alt="Noguchi Museum">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Noguchi Museum</div>
+              <div class="card-location">📍 Long Island City, Queens</div>
+            </div>
+            <div class="tags">
+              <span class="tag arts">Arts</span>
+              <span class="tag vibe">Quiet</span>
+            </div>
+          </div>
+          <p class="card-desc">Isamu Noguchi's entire world — sculpture, light, and a meditative garden that feels like Kyoto landed in Queens. Across from MoMA PS1 but a fraction of the crowd. This is where you sit on a stone bench and exhale.</p>
+          <div class="card-tip"><strong>Do this:</strong> Go on a weekday afternoon. The garden is nearly empty. Bring a notebook.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=800&auto=format&fit=crop&q=80" alt="Brooklyn shore">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Dead Horse Bay</div>
+              <div class="card-location">📍 Brooklyn, Gateway National Recreation Area</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Weird</span>
+            </div>
+          </div>
+          <p class="card-desc">An urban beach where 1920s glass bottles, old leather shoes, and horse bones wash ashore from a buried landfill. Post-apocalyptic and oddly beautiful — like walking through someone else's memory. No crowd ever.</p>
+          <div class="card-tip"><strong>Do this:</strong> Go at low tide. Wear shoes you don't mind getting sandy.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&auto=format&fit=crop&q=80" alt="Coffee">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">KissaKissa</div>
+              <div class="card-location">📍 Bushwick, Brooklyn</div>
+            </div>
+            <div class="tags">
+              <span class="tag coffee">Coffee</span>
+              <span class="tag vibe">Hidden</span>
+            </div>
+          </div>
+          <p class="card-desc">A Japanese kissaten — a real one — in a repurposed textile factory. Dark wood, slow pour-overs, jazz on vinyl, and a policy of no laptops at certain tables. Time moves differently here.</p>
+          <div class="card-tip"><strong>Do this:</strong> Order a hand-drip and read a chapter. Pretend you live in Tokyo circa 1965.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=800&auto=format&fit=crop&q=80" alt="Rooftop view">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Westlight</div>
+              <div class="card-location">📍 Williamsburg, Brooklyn</div>
+            </div>
+            <div class="tags">
+              <span class="tag bar">Bar</span>
+              <span class="tag vibe">Views</span>
+            </div>
+          </div>
+          <p class="card-desc">22nd-floor rooftop at The William Vale. 360° views of Manhattan skyline. The outdoor terrace at golden hour is one of those "I'm actually here" moments. Cocktails are excellent. Vibe is grown-up, not loud.</p>
+          <div class="card-tip"><strong>Do this:</strong> Arrive 30 min before sunset. Request outdoor terrace. Order the mezcal drink.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=800&auto=format&fit=crop&q=80" alt="Fort Tryon Park">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">The Cloisters</div>
+              <div class="card-location">📍 Fort Tryon Park, Upper Manhattan</div>
+            </div>
+            <div class="tags">
+              <span class="tag arts">Arts</span>
+              <span class="tag outdoor">Outdoors</span>
+            </div>
+          </div>
+          <p class="card-desc">A branch of the Met built from imported medieval French monasteries. Walk through Romanesque chapels, unicorn tapestries, and gardens planted exactly as they were in the 14th century. Above the Hudson River, it feels like you've left New York entirely.</p>
+          <div class="card-tip"><strong>Do this:</strong> Take the A train to 190th St. The park walk down is cinematic. First Thursday evenings are free.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&auto=format&fit=crop&q=80" alt="Hudson River">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">City Island</div>
+              <div class="card-location">📍 The Bronx</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag bar">Food</span>
+            </div>
+          </div>
+          <p class="card-desc">A New England fishing village attached to the Bronx by a single bridge. Lobster shacks, marinas, Victorian houses, and a pace that feels like coastal Maine. Nobody believes this is still NYC.</p>
+          <div class="card-tip"><strong>Do this:</strong> Take the Bx29 bus. Eat lobster roll at City Island Lobster House. Walk the waterfront.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=800&auto=format&fit=crop&q=80" alt="Nature boardwalk">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Jamaica Bay Wildlife Refuge</div>
+              <div class="card-location">📍 Queens</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Serene</span>
+            </div>
+          </div>
+          <p class="card-desc">9,000 acres of salt marsh, islands, and tidal flats. Boardwalks over reeds. Herons, ospreys, terrapins. JFK airport is visible in the distance — a surreal reminder that you're still in the city. Empty on weekdays.</p>
+          <div class="card-tip"><strong>Do this:</strong> Walk the loop trail (2.5 miles). Bring binoculars if you have them. Sunset is golden.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1551024601-bec78aea704b?w=800&auto=format&fit=crop&q=80" alt="Cocktail bar">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Dante</div>
+              <div class="card-location">📍 Greenwich Village, Manhattan</div>
+            </div>
+            <div class="tags">
+              <span class="tag bar">Bar</span>
+              <span class="tag vibe">Classic</span>
+            </div>
+          </div>
+          <p class="card-desc">A 110-year-old Italian café turned cocktail bar. It won "World's Best Bar" in 2019 but still feels like an unhurried neighborhood espresso bar. There are campari on tap, negroni fountain, and an actual espresso machine. Afternoon aperitivo is perfect.</p>
+          <div class="card-tip"><strong>Do this:</strong> Go for afternoon aperitivo (4–6pm). Sit at the bar. Order the Garibaldi (campari + OJ).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEATTLE -->
+    <div class="city-section">
+      <div class="city-header">
+        <span class="emoji">🌲</span>
+        <h2>Seattle</h2>
+        <span class="duration">JUL 11 — 13</span>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=800&auto=format&fit=crop&q=80" alt="Peaceful garden">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Kubota Garden</div>
+              <div class="card-location">📍 Rainier Beach, Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Serene</span>
+            </div>
+          </div>
+          <p class="card-desc">A 20-acre Japanese garden built over 50 years by a self-taught Japanese immigrant. Stone bridges, quiet ponds, maples that turn fire-red in summer light. Free and somehow always empty.</p>
+          <div class="card-tip"><strong>Do this:</strong> Morning is best. The mist off the ponds is cinematic. Bring coffee, sit on the stone bridge.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80" alt="Coastal view">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Discovery Park</div>
+              <div class="card-location">📍 Magnolia, Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Wild</span>
+            </div>
+          </div>
+          <p class="card-desc">534 acres of actual wilderness inside city limits. Forest trails, meadows, cliffs dropping to Puget Sound, a functioning lighthouse, and grassy bluffs with Olympics in the distance. The Loop Trail is 2.8 miles of pure Pacific Northwest.</p>
+          <div class="card-tip"><strong>Do this:</strong> Walk the South Beach trail to the lighthouse. Tide pools at low tide. Eagles overhead.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&auto=format&fit=crop&q=80" alt="Coffee shop">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Analog Coffee</div>
+              <div class="card-location">📍 Capitol Hill, Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag coffee">Coffee</span>
+              <span class="tag vibe">Local</span>
+            </div>
+          </div>
+          <p class="card-desc">Seattle's third-wave coffee culture in its purest form — clean lines, perfect espresso, no pretension. This is where people who build the city's tech actually drink. Baristas know regulars. You can pretend to be one for an hour.</p>
+          <div class="card-tip"><strong>Do this:</strong> Order a cortado and sit at the bar. Rain on the window is a bonus.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1531816458010-fb7685eecbcb?w=800&auto=format&fit=crop&q=80" alt="Seattle bay">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Sunset Kayak on Elliott Bay</div>
+              <div class="card-location">📍 Alki Beach or West Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Epic</span>
+            </div>
+          </div>
+          <p class="card-desc">Paddle out as the sun drops behind the Olympics and the downtown skyline turns gold and then purple. Sea lions pop up. Ferries glide past. It's the most underrated perspective of the city.</p>
+          <div class="card-tip"><strong>Do this:</strong> Book a 2-hr sunset slot with Alki Kayak. No experience needed. Bring a dry bag for your phone.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1516802273409-68526ee1bdd6?w=800&auto=format&fit=crop&q=80" alt="Night bar">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Canon</div>
+              <div class="card-location">📍 Capitol Hill, Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag bar">Bar</span>
+              <span class="tag vibe">Serious</span>
+            </div>
+          </div>
+          <p class="card-desc">One of America's best whiskey bars. Over 3,500 bottles. The bartenders are encyclopedias. Dim lighting, leather booths, no TVs, no gimmicks. The kind of bar where you have one drink and it takes 20 minutes because the conversation matters.</p>
+          <div class="card-tip"><strong>Do this:</strong> Ask for something you've never tried from Washington State. Sit at the bar. No rush.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1504198458649-3128b932f49e?w=800&auto=format&fit=crop&q=80" alt="Neighborhood street">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Fremont + Fremont Troll</div>
+              <div class="card-location">📍 Fremont, Seattle</div>
+            </div>
+            <div class="tags">
+              <span class="tag arts">Arts</span>
+              <span class="tag vibe">Quirky</span>
+            </div>
+          </div>
+          <p class="card-desc">The "Center of the Universe" — Seattle's weirdest neighborhood. A giant troll crushing a real VW Beetle lives under the Aurora Bridge. The whole area is street art, vintage shops, and people who chose to live differently. Then walk to the canal and watch the bridge open for boats.</p>
+          <div class="card-tip"><strong>Do this:</strong> Walk Fremont Ave for 20 min. The troll is just the beginning.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAN FRANCISCO -->
+    <div class="city-section">
+      <div class="city-header">
+        <span class="emoji">🌉</span>
+        <h2>San Francisco</h2>
+        <span class="duration">JUL 13 — 17</span>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=800&auto=format&fit=crop&q=80" alt="Filoli gardens">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Filoli Estate &amp; Gardens</div>
+              <div class="card-location">📍 Woodside, 25 min south of SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag arts">Arts</span>
+            </div>
+          </div>
+          <p class="card-desc">654 acres of rolling California hills. 16 acres of formal English-Renaissance gardens. An actual country house that feels stolen from the Cotswolds. Afternoon tea on the terrace. Old California money summered here. It looks like a movie.</p>
+          <div class="card-tip"><strong>Do this:</strong> Allocate half a day. Wear something presentable. The walled garden is the most beautiful spot.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&auto=format&fit=crop&q=80" alt="Books">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Green Apple Books + Clement Street</div>
+              <div class="card-location">📍 Inner Richmond, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag coffee">Coffee</span>
+              <span class="tag vibe">Walk</span>
+            </div>
+          </div>
+          <p class="card-desc">The best bookstore in San Francisco — two floors of new and used, staffed by people who actually read. Then walk Clement Street: old-school dim sum, Vietnamese bakeries, no tourists, all flavor. This is the SF locals don't post about.</p>
+          <div class="card-tip"><strong>Do this:</strong> Buy one paperback you've never heard of. Walk Clement afterward without a plan.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&auto=format&fit=crop&q=80" alt="Coast rocks">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Sutro Baths + Lands End</div>
+              <div class="card-location">📍 Outer Richmond, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Dramatic</span>
+            </div>
+          </div>
+          <p class="card-desc">Ruins of a Victorian-era bathhouse complex at the edge of the Pacific. Stone tunnels, collapsed pools, waves crashing through archways. The Coastal Trail from here is the most cinematic walk in the city — cliffs, cypress trees, and the Golden Gate emerging from fog.</p>
+          <div class="card-tip"><strong>Do this:</strong> Go two hours before sunset. Walk the Lands End trail. Bring a windbreaker.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80" alt="Beach with bridge">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Baker Beach</div>
+              <div class="card-location">📍 Presidio, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Iconic</span>
+            </div>
+          </div>
+          <p class="card-desc">The full Golden Gate Bridge rising from the sand at the north end. Less crowded than Crissy Field, more dramatic than any viewpoint. A mile of beach backed by cliffs and cypress. On a clear day, it's the single best photo you'll take on the whole trip.</p>
+          <div class="card-tip"><strong>Do this:</strong> Walk to the north end for the bridge view. Picnic supplies from Arizmendi Bakery.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?w=800&auto=format&fit=crop&q=80" alt="Sunset">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Wave Organ at Sunset</div>
+              <div class="card-location">📍 Marina District, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Magic</span>
+            </div>
+          </div>
+          <p class="card-desc">A stone and pipe sculpture built into a jetty that makes music from the waves. It sounds like a whale song meeting a pipe organ. At sunset, with Alcatraz in the distance and the Golden Gate lit up, it's surreal.</p>
+          <div class="card-tip"><strong>Do this:</strong> Go 45 min before sunset. Sit near the pipes. Put your phone away. It's a sound experience.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=800&auto=format&fit=crop&q=80" alt="Street art">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Mission Murals Walk</div>
+              <div class="card-location">📍 24th Street, Mission District</div>
+            </div>
+            <div class="tags">
+              <span class="tag arts">Arts</span>
+              <span class="tag vibe">Real</span>
+            </div>
+          </div>
+          <p class="card-desc">Balmy Alley and Clarion Alley — outdoor galleries of political art, community memory, and resistance. Not the Instagram murals in other cities. These are people's histories painted on their own walls. Deep, loud, and human.</p>
+          <div class="card-tip"><strong>Do this:</strong> Start at Balmy Alley. Read the plaques. Grab a burrito after at La Taqueria.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=800&auto=format&fit=crop&q=80" alt="Bar">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Whitechapel</div>
+              <div class="card-location">📍 Tenderloin, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag bar">Bar</span>
+              <span class="tag vibe">Dramatic</span>
+            </div>
+          </div>
+          <p class="card-desc">A gin bar disguised as a London Underground station from 1890. Underground tilework, vintage signs, period cocktails. The most theatrical bar experience in the city without being tacky. It feels like stepping into a time machine.</p>
+          <div class="card-tip"><strong>Do this:</strong> Ask the bartender for a gin you've never tried. The bartenders are historians.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=800&auto=format&fit=crop&q=80" alt="Sunset over hills">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Bernal Heights Summit</div>
+              <div class="card-location">📍 Bernal Heights, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag outdoor">Outdoors</span>
+              <span class="tag vibe">Views</span>
+            </div>
+          </div>
+          <p class="card-desc">A 10-minute hike to the top of a hill with a single iconic tree and a 360° view. Downtown, the Bay Bridge, the Peninsula, and on clear days, Mt. Diablo. There's a rope swing for the brave. Sunset here is a local secret.</p>
+          <div class="card-tip"><strong>Do this:</strong> Car or rideshare to Bernal Heights Park. Walk to the top. Bring a beer and sit on the grass.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <img class="card-image" src="https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800&auto=format&fit=crop&q=80" alt="Night city">
+        <div class="card-body">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Chinatown (The Real One)</div>
+              <div class="card-location">📍 Chinatown + North Beach, SF</div>
+            </div>
+            <div class="tags">
+              <span class="tag vibe">Authentic</span>
+              <span class="tag food">Food</span>
+            </div>
+          </div>
+          <p class="card-desc">The oldest Chinatown in North America. Skip the souvenir shops on Grant Ave and head to Stockton — where actual residents shop, eat, and argue. Dim sum parlors with no English menus, bakeries with egg tarts still warm, funeral flower shops. Then walk into North Beach for espresso at Caffe Trieste (Beat poets drank here).</p>
+          <div class="card-tip"><strong>Do this:</strong> Golden Dragon Bakery for egg tarts. City Lights Bookstore in North Beach after.</div>
+        </div>
+      </div>
+
+      <div class="sf-corridor">
+        <h3>🧠 The AI Nerd Walk (Optional)</h3>
+        <p>If you have one free morning, walk from the old Stripe/Pinterest corridor on Townsend Street up toward the Dropbox/SFMOMA area. Don't visit the offices. Just feel the pace. Grab a coffee at Sightglass on 20th. Sit where you can see the door. Watch who walks in. This is where people are building the next decade.</p>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>Made for KB's first US trip <span class="heart">❤</span></p>
+      <p style="margin-top:8px; opacity:0.6;">The usual stuff is already handled. This is the other half.</p>
+    </div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "kb-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "marked": "^18.0.7",
+    "toml": "^5.0.0"
+  }
+}
