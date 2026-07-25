@@ -1,0 +1,5 @@
+/search/ /blog/ 301
+/page/* /blog/ 301
+/categories/* /tags/ 301
+/series/* /tags/ 301
+/social/* / 301

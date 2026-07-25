@@ -200,7 +200,7 @@ for (const p of posts) {
   <div class="kicker">${fmtDate(p.date)} · ${p.minutes} min read</div>
   <h1>${esc(p.title)}</h1>
   ${p.html}
-  <div class="post-tags">${p.tags.map((t) => `<a class="chip" href="/tags/${t}/">${esc(t)}</a>`).join(" ")}</div>
+  <div class="post-tags">${p.tags.map((t) => `<a class="chip" href="/tags/${t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}/">${esc(t)}</a>`).join(" ")}</div>
 </article>`,
   }));
   for (const a of p.assets)
@@ -276,17 +276,22 @@ for (const pg of [about, ideas])
 
 /* ---------- tags ---------- */
 
-const tagMap = {};
-for (const p of [...posts, ...traces]) for (const t of p.tags) (tagMap[t] ||= []).push(p);
+const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const tagMap = {}; // slug → {name, docs} — same slugs Hugo generated
+for (const p of [...posts, ...traces, ...hikes])
+  for (const t of p.tags) {
+    const s = slugify(t);
+    (tagMap[s] ||= { name: t, docs: [] }).docs.push(p);
+  }
 out("tags/index.html", page({
   title: `Tags · ${SITE.title}`, url: "/tags/",
   body: `<h1 class="page-title">tags</h1><div class="tag-cloud">${
-    Object.keys(tagMap).sort().map((t) => `<a class="chip" href="/tags/${t}/">${esc(t)} · ${tagMap[t].length}</a>`).join(" ")}</div>`,
+    Object.keys(tagMap).sort().map((s) => `<a class="chip" href="/tags/${s}/">${esc(tagMap[s].name)} · ${tagMap[s].docs.length}</a>`).join(" ")}</div>`,
 }));
-for (const [t, docs] of Object.entries(tagMap))
-  out(`tags/${t}/index.html`, page({
-    title: `#${t} · ${SITE.title}`, url: `/tags/${t}/`,
-    body: `<h1 class="page-title">#${esc(t)}</h1><ol class="rows">${
+for (const [s, { name, docs }] of Object.entries(tagMap))
+  out(`tags/${s}/index.html`, page({
+    title: `#${name} · ${SITE.title}`, url: `/tags/${s}/`,
+    body: `<h1 class="page-title">#${esc(name)}</h1><ol class="rows">${
       docs.sort((a, b) => b.date - a.date).map((d) => row(d, d.section)).join("\n")}</ol>`,
   }));
 
