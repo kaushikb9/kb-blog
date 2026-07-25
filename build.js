@@ -11,6 +11,10 @@ const SITE = {
 };
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "dist");
+// content-hash the stylesheet so stale CSS can never pair with fresh HTML
+const CSSV = require("crypto").createHash("md5")
+  .update(fs.readFileSync(path.join(ROOT, "assets", "style.css")))
+  .digest("hex").slice(0, 8);
 
 const SOURCES = {}; // url → content file, for the dev-server edit mode
 
@@ -99,7 +103,7 @@ function page({ title, desc, url, body, progress = false }) {
 <link rel="alternate" type="application/rss+xml" title="${esc(SITE.title)}" href="/index.xml">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css?v=${CSSV}">
 <script>(function(){var t=localStorage.getItem("kb:theme");if(t)document.documentElement.dataset.theme=t;})();</script>
 </head>
 <body>
