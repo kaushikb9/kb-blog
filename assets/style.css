@@ -55,6 +55,27 @@ body {
 
 .tagline { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
 
+/* ---- home bio ---- */
+.bio { margin-bottom: 2.5rem; }
+.bio .hi { font-size: 1.15rem; line-height: 1.6; margin-bottom: 0.75rem; }
+.bio .social { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+.bio .social a { color: var(--muted); text-decoration: none; font-weight: 600; }
+.bio .social a:hover { color: var(--gold); }
+.now { font-size: 0.88rem; color: var(--muted); }
+.now-label {
+  font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--gold);
+  background: var(--gold-soft); border-radius: 99px; padding: 0.12rem 0.55rem;
+  margin-right: 0.35rem;
+}
+.year {
+  font-size: 0.8rem; font-weight: 700; color: var(--ink);
+  margin: 1.1rem 0 0.15rem; font-variant-numeric: tabular-nums;
+}
+.more-link { margin-top: 0.6rem; font-size: 0.85rem; }
+.more-link a { color: var(--gold); text-decoration: none; font-weight: 600; }
+.more-link a:hover { text-decoration: underline; }
+
 /* ---- cards (shared language with antifeed) ---- */
 .card {
   background: var(--card);

@@ -124,29 +124,41 @@ const row = (d, sub) => `<li>
   </a>
 </li>`;
 
-/* ---------- home ---------- */
+/* ---------- home: bio + now + writing by year + traces strip ---------- */
 
-const [latest, ...rest] = posts;
+const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲", flag: "⚑" };
+const now = fs.readFileSync(path.join(ROOT, "content", "now.txt"), "utf8").trim();
+const homeYears = {};
+for (const p of posts) (homeYears[p.date.getFullYear()] ||= []).push(p);
+
 out("index.html", page({
   title: SITE.title, url: "/",
   body: `
-<p class="tagline">Byte-sized ramblings on engineering management, productivity
-and personal growth.</p>
-
-<article class="card">
-  <div class="kicker">latest
-    <span class="meta">${fmtDate(latest.date)} · ${latest.minutes} min</span>
-  </div>
-  <h2><a href="${latest.url}">${esc(latest.title)}</a></h2>
-  <p class="hook">${esc(latest.description)}</p>
-  <div class="actions"><a class="go" href="${latest.url}">Read it →</a></div>
-</article>
+<section class="bio">
+  <p class="hi">Hi there 👋🏼 — I'm Kaushik. I lead engineering teams, build
+  personal AI agents, and write byte-sized ramblings on both.</p>
+  <p class="social">
+    <a href="https://twitter.com/kaushikb9">twitter</a> ·
+    <a href="https://www.linkedin.com/in/kaushikbhat/">linkedin</a> ·
+    <a href="https://github.com/kaushikb9">github</a> ·
+    <a href="/index.xml">rss</a>
+  </p>
+  <p class="now"><span class="now-label">now</span> ${esc(now)}</p>
+</section>
 
 <section class="list-section">
-  <h3 class="section-label">previously</h3>
+  <h3 class="section-label">writing</h3>
+  ${Object.keys(homeYears).sort((a, b) => b - a).map((y) => `
+  <h4 class="year">${y}</h4>
+  <ol class="rows">${homeYears[y].map((p) => row(p, `${p.minutes} min · ${p.tags.slice(0, 3).join(" · ")}`)).join("\n")}</ol>`).join("\n")}
+</section>
+
+<section class="list-section">
+  <h3 class="section-label">traces</h3>
   <ol class="rows">
-    ${rest.map((p) => row(p, `${p.minutes} min · ${p.tags.slice(0, 3).join(" · ")}`)).join("\n")}
+    ${traces.slice(0, 2).map((t) => row(t, `${KIND_GLYPHS[t.kind] || ""} ${t.kind}`)).join("\n")}
   </ol>
+  <p class="more-link"><a href="/traces/">all traces →</a></p>
 </section>`,
 }));
 
@@ -219,6 +231,12 @@ for (const t of traces) {
 
 /* ---------- hikes, about, ideas ---------- */
 
+out("hikes/index.html", page({
+  title: `Hikes · ${SITE.title}`, url: "/hikes/",
+  body: `<h1 class="page-title">hikes</h1>
+<p class="tagline">Trails walked, serendipity found.</p>
+<ol class="rows">${hikes.map((h) => row(h, `${h.minutes} min`)).join("\n")}</ol>`,
+}));
 for (const h of hikes) {
   out(path.join(h.url.slice(1), "index.html"), page({
     title: `${h.title} · ${SITE.title}`, url: h.url,
@@ -275,7 +293,7 @@ ${feedDocs.map((d) => `  <item>
 </channel>
 </rss>`);
 
-const urls = ["/", "/blog/", "/posts/", "/traces/", "/about/", "/ideas/", "/tags/",
+const urls = ["/", "/blog/", "/posts/", "/traces/", "/hikes/", "/about/", "/ideas/", "/tags/",
   ...posts.map((p) => p.url), ...traces.map((t) => t.url), ...hikes.map((h) => h.url),
   ...Object.keys(tagMap).map((t) => `/tags/${t}/`), "/us-trip-gems/"];
 out("sitemap.xml", `<?xml version="1.0" encoding="utf-8"?>
