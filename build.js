@@ -37,8 +37,16 @@ function loadDoc(file, section) {
     ? fs.readdirSync(dir).filter((f) => !f.endsWith(".md")).map((f) => path.join(dir, f))
     : [];
   SOURCES[url] = path.relative(ROOT, file);
+  const plain = g.content
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[#>*_`~-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  const excerpt = g.data.description ||
+    plain.slice(0, 220) + (plain.length > 220 ? "…" : "");
   return {
-    section, slug, url,
+    section, slug, url, excerpt,
     title: g.data.title || slug,
     date: g.data.date ? new Date(g.data.date) : null,
     tags: g.data.tags || [],
@@ -110,6 +118,15 @@ ${body}
 <footer>
   <p>© kaushik bhat · <a href="/index.xml">rss</a> · <a href="https://antifeed.pages.dev">what i read</a></p>
 </footer>
+<script>
+document.addEventListener("click",(e)=>{
+  if(e.target.closest("a, button, .expand")) return;
+  const li=e.target.closest("li.exp"); if(!li) return;
+  const ex=li.querySelector(".expand"); const wasOpen=!ex.hidden;
+  document.querySelectorAll("li.exp .expand").forEach((x)=>x.hidden=true);
+  ex.hidden=wasOpen;
+});
+</script>
 ${progress ? `<script>
 const bar=document.getElementById("progress");
 addEventListener("scroll",()=>{const h=document.documentElement;
@@ -119,12 +136,20 @@ bar.style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+"%"},{passive:
 </html>`;
 }
 
-const row = (d, sub) => `<li>
-  <a class="row" href="${d.url}">
+const row = (d, sub, attrs = "") => `<li class="exp" ${attrs}>
+  <div class="row">
     <span class="when">${d.date ? fmtDate(d.date) : ""}</span>
-    <span class="t"><span class="rt">${esc(d.title)}</span>
+    <span class="t"><a class="rt" href="${d.url}">${esc(d.title)}</a>
       <span class="sub">${sub}</span></span>
-  </a>
+  </div>
+  <div class="expand" hidden>
+    <article class="card mini">
+      <div class="kicker">preview
+        <span class="meta">${d.date ? fmtDate(d.date) : ""} · ${d.minutes} min</span></div>
+      <p class="hook">${esc(d.excerpt)}</p>
+      <div class="actions"><a class="go" href="${d.url}">Read it →</a></div>
+    </article>
+  </div>
 </li>`;
 
 /* ---------- home: bio + now + writing by year + traces strip ---------- */
@@ -204,13 +229,7 @@ out("traces/index.html", page({
   ${Object.keys(KINDS).map((k) => `<button data-kind="${k}">${k}</button>`).join("\n")}
 </nav>
 <ol class="rows" id="trace-list">
-  ${traces.map((t) => `<li data-kind="${t.kind}">
-    <a class="row" href="${t.url}">
-      <span class="when">${fmtDate(t.date)}</span>
-      <span class="t"><span class="rt">${esc(t.title)}</span>
-        <span class="sub">${KINDS[t.kind] || t.kind}</span></span>
-    </a>
-  </li>`).join("\n")}
+  ${traces.map((t) => row(t, KINDS[t.kind] || t.kind, `data-kind="${t.kind}"`)).join("\n")}
 </ol>
 <script>
 document.getElementById("filters").addEventListener("click",(e)=>{
