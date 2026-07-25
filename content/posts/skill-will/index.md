@@ -1,5 +1,6 @@
 ---
 title: "Situational Leadership"
+tags: ["leadership"]
 date: 2024-06-09T09:10:51.000Z
 description: "A practical take on the Situational Leadership framework — knowing when to direct, coach, support, or delegate."
 draft: false

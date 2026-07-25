@@ -1,7 +1,7 @@
 ---
 title: "Don’t Wait for Perfect. Just Ship"
 date: 2025-05-23
-tags: ["AI tools", "Developer Productivity", "Shipping Fast", "Cursor", "Copilot"]
+tags: ["ai", "productivity"]
 draft: false
 ---
 

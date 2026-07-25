@@ -2,7 +2,7 @@
 title: "Influence, Momentum and Growth"
 date: 2025-07-12T17:45:00+05:30
 description: "Hard work isn't the problem. Visibility, leverage and momentum are where things start to click."
-tags: ["career", "growth", "influence", "visibility"]
+tags: ["career", "growth"]
 draft: false
 ---
 

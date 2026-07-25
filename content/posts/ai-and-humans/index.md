@@ -1,5 +1,6 @@
 ---
 title: "Scaling AI, with humans"
+tags: ["ai", "leadership"]
 date: 2025-06-28T18:30:00.000Z
 description: "AI is changing how we work. A mental model that helped me focus on what to focus on, what to let go, and what I need to grow into."
 draft: false

@@ -1,5 +1,6 @@
 ---
 title: "Finding My Outie"
+tags: ["reflections"]
 date: "2025-06-08"
 description: "A check-in on energy, curiosity, and life beyond the job."
 draft: false

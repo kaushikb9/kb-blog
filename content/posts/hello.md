@@ -1,5 +1,6 @@
 ---
 title: "Hello"
+tags: ["meta"]
 date: 2024-05-01T06:38:51.000Z
 description: "Why I moved my blog to a self-hosted platform and what to expect from this space."
 draft: false

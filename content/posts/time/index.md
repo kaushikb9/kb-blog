@@ -1,5 +1,6 @@
 ---
 title: "Debugging Distractions"
+tags: ["productivity", "focus"]
 date: 2024-05-05T06:40:09.000Z
 description: "A mental model for protecting your time and focusing on what truly matters — the Zone of Genius framework."
 draft: false

@@ -192,6 +192,7 @@ body {
 .prose hr { border: none; border-top: 1px solid var(--line); margin: 1.75rem 0; }
 
 .post-tags { margin-top: 2rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.prose .chip { text-decoration: none; }
 .chip {
   font-size: 0.75rem; color: var(--muted); text-decoration: none;
   border: 1px solid var(--line); border-radius: 99px; padding: 0.15rem 0.65rem;
