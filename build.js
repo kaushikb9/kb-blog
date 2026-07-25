@@ -100,6 +100,7 @@ function page({ title, desc, url, body, progress = false }) {
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/style.css">
+<script>(function(){var t=localStorage.getItem("kb:theme");if(t)document.documentElement.dataset.theme=t;})();</script>
 </head>
 <body>
 ${progress ? `<div id="progress"></div>` : ""}
@@ -110,6 +111,7 @@ ${progress ? `<div id="progress"></div>` : ""}
     <a href="/traces/">traces</a>
     <a href="/ideas/">ideas</a>
     <a href="/about/">about</a>
+    <button id="theme-btn" aria-label="toggle theme"></button>
   </nav>
 </header>
 <main>
@@ -126,6 +128,25 @@ document.addEventListener("click",(e)=>{
   document.querySelectorAll("li.exp .expand").forEach((x)=>x.hidden=true);
   ex.hidden=wasOpen;
 });
+
+const THEME_ICONS={
+  auto:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>',
+  light:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+  dark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>'};
+function applyTheme(){
+  const t=localStorage.getItem("kb:theme")||"auto";
+  if(t==="auto")delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme=t;
+  const b=document.getElementById("theme-btn");
+  b.innerHTML=THEME_ICONS[t]; b.title="theme: "+t;
+}
+document.getElementById("theme-btn").addEventListener("click",()=>{
+  const o=["auto","light","dark"];
+  const n=o[(o.indexOf(localStorage.getItem("kb:theme")||"auto")+1)%3];
+  n==="auto"?localStorage.removeItem("kb:theme"):localStorage.setItem("kb:theme",n);
+  applyTheme();
+});
+applyTheme();
 </script>
 ${progress ? `<script>
 const bar=document.getElementById("progress");

@@ -9,7 +9,7 @@
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #131210;
     --ink: #e8e4dc;
     --muted: #8f887c;
@@ -17,7 +17,18 @@
     --card: #1b1916;
     --gold: #e0b04f;
     --gold-soft: #2e2718;
+    color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --bg: #131210;
+  --ink: #e8e4dc;
+  --muted: #8f887c;
+  --line: #2a2721;
+  --card: #1b1916;
+  --gold: #e0b04f;
+  --gold-soft: #2e2718;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; margin: 0; }
@@ -52,6 +63,12 @@ body {
   color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;
 }
 .site-head nav a:hover { color: var(--gold); }
+#theme-btn {
+  background: none; border: none; cursor: pointer; color: var(--muted);
+  padding: 0.15rem; line-height: 1;
+}
+#theme-btn:hover { color: var(--gold); }
+#theme-btn svg { width: 1.05em; height: 1.05em; display: block; }
 
 .tagline { color: var(--muted); font-size: 0.95rem; margin-bottom: 2rem; }
 
