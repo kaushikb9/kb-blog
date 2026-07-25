@@ -11,6 +11,7 @@ const SITE = {
 };
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "dist");
+fs.rmSync(DIST, { recursive: true, force: true }); // always build clean
 // content-hash the stylesheet so stale CSS can never pair with fresh HTML
 const CSSV = require("crypto").createHash("md5")
   .update(fs.readFileSync(path.join(ROOT, "assets", "style.css")))
