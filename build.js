@@ -12,6 +12,8 @@ const SITE = {
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "dist");
 
+const SOURCES = {}; // url → content file, for the dev-server edit mode
+
 const fmtDate = (d) =>
   new Date(d).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -34,6 +36,7 @@ function loadDoc(file, section) {
   const assets = isBundle
     ? fs.readdirSync(dir).filter((f) => !f.endsWith(".md")).map((f) => path.join(dir, f))
     : [];
+  SOURCES[url] = path.relative(ROOT, file);
   return {
     section, slug, url,
     title: g.data.title || slug,
@@ -128,6 +131,8 @@ const row = (d, sub) => `<li>
 
 const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲", flag: "⚑" };
 const now = fs.readFileSync(path.join(ROOT, "content", "now.txt"), "utf8").trim();
+const bio = marked.parse(matter(fs.readFileSync(path.join(ROOT, "content", "home.md"), "utf8")).content);
+SOURCES["/"] = "content/home.md";
 const homeYears = {};
 for (const p of posts) (homeYears[p.date.getFullYear()] ||= []).push(p);
 
@@ -135,8 +140,7 @@ out("index.html", page({
   title: SITE.title, url: "/",
   body: `
 <section class="bio">
-  <p class="hi">Hi there 👋🏼 — I'm Kaushik. I lead engineering teams, build
-  personal AI agents, and write byte-sized ramblings on both.</p>
+  <div class="hi">${bio}</div>
   <p class="social">
     <a href="https://twitter.com/kaushikb9">twitter</a> ·
     <a href="https://www.linkedin.com/in/kaushikbhat/">linkedin</a> ·
@@ -313,4 +317,5 @@ ${urls.map((u) => `  <url><loc>${SITE.base}${u}</loc></url>`).join("\n")}
 for (const f of fs.readdirSync(path.join(ROOT, "assets")))
   fs.copyFileSync(path.join(ROOT, "assets", f), path.join(DIST, f));
 
+fs.writeFileSync(path.join(ROOT, ".sources.json"), JSON.stringify(SOURCES, null, 2));
 console.log(`built: ${posts.length} posts, ${traces.length} traces, ${Object.keys(tagMap).length} tags → dist/`);

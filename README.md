@@ -13,9 +13,16 @@ language to antifeed (warm paper / ink / gold).
 - `migrate.js` — one-time importer from ../kb-hugo (kept for reference)
 
 ```sh
-node build.js                        # → dist/
-python3 -m http.server -d dist 8654  # preview
+node dev.js      # preview at localhost:8654 with in-browser editing:
+                 #   ✎ edit button on every content page → markdown textarea
+                 #   → Save & rebuild. Direct file edits auto-rebuild too.
+node build.js    # plain one-shot build → dist/
 ```
+
+Everything readable is markdown in `content/` — posts, traces, about,
+ideas, the home bio (`home.md`), the "now" line (`now.txt`). `dev.js` is
+LOCAL ONLY (binds 127.0.0.1, writes files) — never deploy it; production
+is just the static `dist/`.
 
 ## Verified parity with the live Hugo site
 
