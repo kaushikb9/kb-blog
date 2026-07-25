@@ -179,7 +179,7 @@ const row = (d, sub, attrs = "") => `<li class="exp" ${attrs}>
 
 /* ---------- home: bio + now + writing by year + traces strip ---------- */
 
-const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲", flag: "⚑" };
+const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲" };
 const now = fs.readFileSync(path.join(ROOT, "content", "now.txt"), "utf8").trim();
 const bio = marked.parse(matter(fs.readFileSync(path.join(ROOT, "content", "home.md"), "utf8")).content);
 SOURCES["/"] = "content/home.md";
@@ -244,7 +244,7 @@ for (const u of ["blog/index.html", "posts/index.html"])
 
 /* ---------- traces ---------- */
 
-const KINDS = { spark: "spark ✦", reflect: "reflect ☾", peak: "peak ▲", flag: "flag ⚑" };
+const KINDS = { spark: "spark ✦", reflect: "reflect ☾", peak: "peak ▲" };
 out("traces/index.html", page({
   title: `Traces · ${SITE.title}`, url: "/traces/",
   body: `<h1 class="page-title">traces</h1>

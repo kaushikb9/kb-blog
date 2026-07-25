@@ -35,10 +35,9 @@ is just the static `dist/`.
   /categories/ /series/ /social/ (empty taxonomies), 4 stale empty tag pages
   that were already contentless on the old site
 
-## Not yet done (pre-publish checklist)
+## Status
 
-- Decision to publish at all (this is a local rebuild for evaluation)
-- Cloudflare Pages project in the account that owns kaushikbhat.com + cutover
-- `_redirects` for /search/ and /page/2/ → /blog/
-- Image WebP conversion (8 PNGs served as-is for now)
-- Analytics (old site's token was a broken placeholder — decide if wanted)
+Published: Cloudflare Pages project `kb-blog`, serving kaushikbhat.com.
+`_redirects` covers retired routes. Still open, someday: image WebP
+conversion (8 PNGs served as-is), analytics (old site's token was a broken
+placeholder — decide if wanted at all).
