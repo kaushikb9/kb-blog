@@ -115,6 +115,7 @@ ${progress ? `<div id="progress"></div>` : ""}
     <a href="/traces/">traces</a>
     <a href="/ideas/">ideas</a>
     <a href="/about/">about</a>
+    <a href="https://antifeed.pages.dev">antifeed</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
   </nav>
 </header>
