@@ -6,7 +6,7 @@ github.com/kaushikb9/kb-hugo, its Pages project deleted the same day). Live Page
 project `kb-blog` (kb-blog-44d.pages.dev), custom domain kaushikbhat.com,
 same Cloudflare account as antifeed.
 
-Design language: **`../design-system/`** is canonical for tokens, type scale,
+Design language: **`../brain/design-system/`** is canonical for tokens, type scale,
 theme presets and the cross-app invariants — read `INVARIANTS.md` before
 touching type, colour or interaction.
 
