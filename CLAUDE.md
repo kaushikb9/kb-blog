@@ -1,9 +1,14 @@
 # kb-blog
 
 kaushikbhat.com, rebuilt hand-rolled (2026-07-25) — replaced the Hugo/PaperMod
-site in `~/Code/kb-hugo` (kept on disk as archive; do not edit it). Live Pages
+site kb-hugo (local copy deleted 2026-07-28; repo archived 2026-08-29 at
+github.com/kaushikb9/kb-hugo, its Pages project deleted the same day). Live Pages
 project `kb-blog` (kb-blog-44d.pages.dev), custom domain kaushikbhat.com,
 same Cloudflare account as antifeed.
+
+Design language: **`../design-system/`** is canonical for tokens, type scale,
+theme presets and the cross-app invariants — read `INVARIANTS.md` before
+touching type, colour or interaction.
 
 ## Why it's built this way
 
