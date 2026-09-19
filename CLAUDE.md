@@ -1,14 +1,30 @@
 # kb-blog
 
-kaushikbhat.com, rebuilt hand-rolled (2026-07-25) — replaced the Hugo/PaperMod
+kaushik.sh (kaushikbhat.com until 2026-09-19; the old host 301s here), rebuilt hand-rolled (2026-07-25) — replaced the Hugo/PaperMod
 site kb-hugo (local copy deleted 2026-07-28; repo archived 2026-08-29 at
 github.com/kaushikb9/kb-hugo, its Pages project deleted the same day). Live Pages
-project `kb-blog` (kb-blog-44d.pages.dev), custom domain kaushikbhat.com,
+project `kb-blog` (kb-blog-44d.pages.dev), custom domain kaushik.sh (+ www),
 same Cloudflare account as antifeed.
 
 Design language: **`../brain/design-system/`** is canonical for tokens, type scale,
 theme presets and the cross-app invariants — read `INVARIANTS.md` before
 touching type, colour or interaction.
+
+## Run · verify · deploy
+
+```sh
+npm run build    # content/ → dist/  (node build.js)
+npm run dev      # localhost:8654 preview + ✎ edit, LOCAL ONLY
+./check.sh       # build, then hold dist/ to the invariants below — ~1s, offline (npm test is the same)
+npm run deploy   # ./check.sh && wrangler pages deploy dist  (only when KB asks; refuses on red)
+```
+
+`./check.sh` is `node --test tests/*.test.js`: every route the old site had is
+emitted; every internal link resolves (or is a `_redirects` source); every RSS
+GUID equals its permalink and every feed/sitemap entry is a real page; the
+`style.css?v=` hash matches the CSS that shipped; tag URLs are slugified;
+every post/trace has a title and a parseable date and no `_index.md`. Hand
+work back only after it passes.
 
 ## Why it's built this way
 
@@ -54,7 +70,7 @@ generator.
 - Nav pattern on both sites: [content links] · [other property] · about ·
   theme toggle. Blog nav: writing · traces · antifeed · about. antifeed
   links back as "kb".
-- antifeed deliberately stays on pages.dev, NOT a kaushikbhat.com
+- antifeed deliberately stays on pages.dev, NOT a kaushik.sh
   subdomain — KB may spin it out as an independent product later. Don't
   "helpfully" suggest the subdomain again.
 - Stylesheet URL is content-hashed by build.js (`style.css?v=<md5>`) so
@@ -64,7 +80,7 @@ generator.
 ## Deploy
 
 ```sh
-node build.js && npx wrangler pages deploy dist --project-name kb-blog --branch main
+npm run deploy   # = ./check.sh && npx wrangler pages deploy dist --project-name kb-blog --branch main
 ```
 
 Static-only (no functions/), so no bundle gotcha here — but run from repo
@@ -79,3 +95,10 @@ cache-bust when verifying.
 - Old site's Cloudflare analytics token was a placeholder — analytics was
   never on. Deciding whether to add any is an open item.
 - Images are original PNGs (8 of them); WebP conversion is a deferred nicety.
+
+## Deferred — don't build unless asked
+
+- Analytics of any kind (open item, not a yes).
+- WebP conversion of the eight PNGs.
+- A search page, a newsletter, comments. The blog is ~12 documents; it does
+  not need a system.

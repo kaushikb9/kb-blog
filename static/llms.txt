@@ -6,20 +6,20 @@ This is the personal website of Kaushik Bhat — an engineering leader based in 
 
 ## Sections
 
-- [Blog](https://kaushikbhat.com/blog/): Long-form posts on engineering leadership, career growth, AI strategy, and productivity
-- [Traces](https://kaushikbhat.com/traces/): Short-form thought captures — ideas, things I learned, wins
-- [About](https://kaushikbhat.com/about/): Bio and contact info
-- [Ideas](https://kaushikbhat.com/ideas/): Public list of ideas and things to explore
+- [Blog](https://kaushik.sh/blog/): Long-form posts on engineering leadership, career growth, AI strategy, and productivity
+- [Traces](https://kaushik.sh/traces/): Short-form thought captures — ideas, things I learned, wins
+- [About](https://kaushik.sh/about/): Bio and contact info
+- [Ideas](https://kaushik.sh/ideas/): Public list of ideas and things to explore
 
 ## Blog Posts
 
-- [Influence, Momentum and Growth](https://kaushikbhat.com/posts/influence/): On visibility, leverage and career growth for engineers
-- [Scaling AI, with humans](https://kaushikbhat.com/posts/ai-and-humans/): A mental model for where AI helps, where humans matter, and where the combo works best
-- [Finding My Outie](https://kaushikbhat.com/posts/finding-my-outie/): A check-in on energy, curiosity, and life beyond the job
-- [Don't Wait for Perfect. Just Ship](https://kaushikbhat.com/posts/ai-inspired-shipping/): How one AI tool sparked creativity by shipping fast and iterating
-- [Situational Leadership](https://kaushikbhat.com/posts/skill-will/): A practical take on the Situational Leadership framework
-- [Debugging Distractions](https://kaushikbhat.com/posts/time/): A mental model for protecting your time — the Zone of Genius framework
-- [Hello](https://kaushikbhat.com/posts/hello/): Welcome post — why this blog exists
+- [Influence, Momentum and Growth](https://kaushik.sh/posts/influence/): On visibility, leverage and career growth for engineers
+- [Scaling AI, with humans](https://kaushik.sh/posts/ai-and-humans/): A mental model for where AI helps, where humans matter, and where the combo works best
+- [Finding My Outie](https://kaushik.sh/posts/finding-my-outie/): A check-in on energy, curiosity, and life beyond the job
+- [Don't Wait for Perfect. Just Ship](https://kaushik.sh/posts/ai-inspired-shipping/): How one AI tool sparked creativity by shipping fast and iterating
+- [Situational Leadership](https://kaushik.sh/posts/skill-will/): A practical take on the Situational Leadership framework
+- [Debugging Distractions](https://kaushik.sh/posts/time/): A mental model for protecting your time — the Zone of Genius framework
+- [Hello](https://kaushik.sh/posts/hello/): Welcome post — why this blog exists
 
 ## Topics
 

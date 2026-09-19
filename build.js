@@ -5,7 +5,7 @@ const matter = require("gray-matter");
 const { marked } = require("marked");
 
 const SITE = {
-  base: "https://kaushikbhat.com",
+  base: "https://kaushik.sh",
   title: "Kaushik Bhat",
   desc: "Byte-sized ramblings on engineering management, productivity and personal growth — by Kaushik Bhat",
 };
@@ -102,8 +102,11 @@ function page({ title, desc, url, body, progress = false }) {
 <meta name="twitter:card" content="summary">
 <link rel="canonical" href="${SITE.base}${url}">
 <link rel="alternate" type="application/rss+xml" title="${esc(SITE.title)}" href="/index.xml">
+<link rel="manifest" href="/manifest.webmanifest">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#7b2d8e">
 <link rel="stylesheet" href="/style.css?v=${CSSV}">
 <script>(function(){var t=localStorage.getItem("kb:theme");if(t)document.documentElement.dataset.theme=t;})();</script>
 </head>

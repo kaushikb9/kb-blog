@@ -1,6 +1,6 @@
 # kb-blog
 
-kaushikbhat.com rebuilt hand-rolled — no framework, no Hugo. Sibling design
+kaushik.sh (formerly kaushikbhat.com) rebuilt hand-rolled — no framework, no Hugo. Sibling design
 language to antifeed (warm paper / ink / gold).
 
 - `content/` — markdown with YAML frontmatter (migrated from kb-hugo,
@@ -37,7 +37,7 @@ is just the static `dist/`.
 
 ## Status
 
-Published: Cloudflare Pages project `kb-blog`, serving kaushikbhat.com.
+Published: Cloudflare Pages project `kb-blog`, serving kaushik.sh (kaushikbhat.com 301s to it since 2026-09-19).
 `_redirects` covers retired routes. Still open, someday: image WebP
 conversion (8 PNGs served as-is), analytics (old site's token was a broken
 placeholder — decide if wanted at all).
