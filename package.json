@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js",
+    "dev": "node dev.js",
+    "test": "./check.sh",
+    "deploy": "./check.sh && npx wrangler pages deploy dist --project-name kb-blog --branch main"
   },
   "keywords": [],
   "author": "",
