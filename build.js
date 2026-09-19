@@ -106,7 +106,7 @@ function page({ title, desc, url, body, progress = false }) {
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#7b2d8e">
+<meta name="theme-color" content="#faf8f4">
 <link rel="stylesheet" href="/style.css?v=${CSSV}">
 <script>(function(){var t=localStorage.getItem("kb:theme");if(t)document.documentElement.dataset.theme=t;})();</script>
 </head>
