@@ -84,6 +84,9 @@ const hikes = loadSection("hikes");
 const about = loadDoc(path.join(ROOT, "content", "about.md"), "");
 const ideas = loadDoc(path.join(ROOT, "content", "ideas.md"), "");
 about.url = "/about/"; ideas.url = "/ideas/";
+// lab: the frontmatter IS the data (apps + talks lists); the body is unused
+const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
+SOURCES["/lab/"] = "content/lab.md";
 
 /* ---------- layout ---------- */
 
@@ -117,7 +120,7 @@ ${progress ? `<div id="progress"></div>` : ""}
   <nav>
     <a href="/">writing</a>
     <a href="/traces/">traces</a>
-    <a href="https://antifeed.pages.dev">antifeed</a>
+    <a href="/lab/">lab</a>
     <a href="/about/">about</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
   </nav>
@@ -303,9 +306,36 @@ for (const pg of [about, ideas])
     body: `<article class="prose"><h1>${esc(pg.title)}</h1>${pg.html}</article>`,
   }));
 
+/* ---------- lab: a gallery of tiles, one per app or talk ---------- */
+
+const labRow = (e) => {
+  const name = e.name || e.title;
+  const line = e.line || e.where || "";
+  const inner = `${e.image ? `<img class="shot" src="/lab/${esc(e.image)}" alt="" loading="lazy">` : ""}
+    <span class="body"><span class="rt">${esc(name)}</span>
+      <span class="sub">${esc(line)}</span>
+      ${e.url ? `<span class="go">${esc(e.label || "open")} ↗</span>` : ""}</span>`;
+  return e.url
+    ? `<li><a class="tile" href="${esc(e.url)}" target="_blank" rel="noopener">${inner}</a></li>`
+    : `<li><div class="tile">${inner}</div></li>`;
+};
+const labSection = (label, list) => (list && list.length) ? `
+<section class="list-section">
+  <h3 class="section-label">${label}</h3>
+  <ol class="lab">${list.map(labRow).join("\n")}</ol>
+</section>` : "";
+out("lab/index.html", page({
+  title: `${lab.title} · ${SITE.title}`, url: "/lab/", desc: lab.tagline,
+  body: `<h1 class="page-title">${esc(lab.title)}</h1>
+<p class="tagline">${esc(lab.tagline)}</p>${labSection("apps", lab.apps)}${labSection("talks", lab.talks)}`,
+}));
+for (const f of fs.readdirSync(path.join(ROOT, "content", "lab")))
+  fs.copyFileSync(path.join(ROOT, "content", "lab", f), path.join(DIST, "lab", f));
+
 /* ---------- tags ---------- */
 
 const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
 const tagMap = {}; // slug → {name, docs} — same slugs Hugo generated
 for (const p of [...posts, ...traces, ...hikes])
   for (const t of p.tags) {
@@ -350,7 +380,7 @@ ${feedDocs.map((d) => `  <item>
 </channel>
 </rss>`);
 
-const urls = ["/", "/blog/", "/posts/", "/traces/", "/hikes/", "/about/", "/ideas/", "/tags/",
+const urls = ["/", "/blog/", "/posts/", "/traces/", "/hikes/", "/about/", "/ideas/", "/lab/", "/tags/",
   ...posts.map((p) => p.url), ...traces.map((t) => t.url), ...hikes.map((h) => h.url),
   ...Object.keys(tagMap).map((t) => `/tags/${t}/`), "/us-trip-gems/"];
 out("sitemap.xml", `<?xml version="1.0" encoding="utf-8"?>
@@ -371,4 +401,4 @@ for (const f of fs.readdirSync(path.join(ROOT, "assets")))
   fs.copyFileSync(path.join(ROOT, "assets", f), path.join(DIST, f));
 
 fs.writeFileSync(path.join(ROOT, ".sources.json"), JSON.stringify(SOURCES, null, 2));
-console.log(`built: ${posts.length} posts, ${traces.length} traces, ${Object.keys(tagMap).length} tags → dist/`);
+console.log(`built: ${posts.length} posts, ${traces.length} traces, ${Object.keys(tagMap).length} tags, ${(lab.apps || []).length + (lab.talks || []).length} lab rows → dist/`);

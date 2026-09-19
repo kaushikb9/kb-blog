@@ -39,7 +39,7 @@ before(() => {
 
 test("build emits every route the old site had", () => {
   for (const need of ["/index.html", "/index.xml", "/sitemap.xml", "/404.html", "/_redirects",
-                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/traces/index.html", "/tags/index.html"])
+                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/lab/index.html", "/traces/index.html", "/tags/index.html"])
     assert.ok(exists.has(need), `dist${need} not emitted by build.js`);
   assert.ok(redirects.length > 0, "static/_redirects is empty — the retired Hugo routes must keep 301ing");
 });
@@ -98,7 +98,7 @@ test("every post and trace has a title and a date; no Hugo branch bundles", () =
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
       const p = path.join(d, e.name);
       if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith(".md") && !/^(about|ideas|home)\.md$/.test(e.name)) {
+      else if (e.name.endsWith(".md") && !/^(about|ideas|home|lab)\.md$/.test(e.name)) {
         const r = path.relative(ROOT, p);
         assert.notEqual(e.name, "_index.md", `${r}: _index.md is a Hugo branch bundle — use index.md, or RSS silently drops it`);
         const g = matter(fs.readFileSync(p, "utf8"));
@@ -107,4 +107,32 @@ test("every post and trace has a title and a date; no Hugo branch bundles", () =
       }
     }
   })(path.join(ROOT, "content"));
+});
+
+test("lab.md: every row has a name and a line; links are https; images exist", () => {
+  const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
+  assert.ok(Array.isArray(lab.apps) && lab.apps.length > 0, "content/lab.md: apps is empty — the page would render with no rows");
+  for (const e of lab.apps) {
+    const who = `content/lab.md app "${e.name || "?"}"`;
+    assert.ok(e.name, `${who}: no name`);
+    assert.ok(e.line, `${who}: no line — say what it is in one sentence`);
+    if (e.url) assert.match(e.url, /^https:\/\//, `${who}: url must be absolute https, got ${e.url}`);
+    if (e.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "lab", e.image)), `${who}: image content/lab/${e.image} does not exist`);
+  }
+  for (const t of lab.talks || []) {
+    const who = `content/lab.md talk "${t.title || "?"}"`;
+    assert.ok(t.title, `${who}: no title`);
+    assert.ok(t.url, `${who}: no url — a talk row exists to link slides or video`);
+    if (t.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "lab", t.image)), `${who}: image content/lab/${t.image} does not exist`);
+  }
+});
+
+test("lab page emits a section only for a non-empty list", () => {
+  const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
+  const src = fs.readFileSync(path.join(DIST, "lab", "index.html"), "utf8");
+  for (const [key, label] of [["apps", "apps"], ["talks", "talks"]]) {
+    const has = src.includes(`<h3 class="section-label">${label}</h3>`);
+    const want = (lab[key] || []).length > 0;
+    assert.equal(has, want, `/lab/: "${label}" section ${has ? "rendered" : "missing"} but ${key} has ${(lab[key] || []).length} rows — never pad a section`);
+  }
 });

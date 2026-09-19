@@ -40,10 +40,17 @@ generator.
   bundles or flat files), `traces/` (short notes, `trace_kind`:
   spark/reflect/peak — "flag" was dropped 2026-07-25, unused), `hikes/`,
   `about.md`, `ideas.md` (page exists, deliberately NOT in nav), `home.md`
-  (the bio), `now.txt` (one plain line shown in the gold "now" pill).
+  (the bio), `now.txt` (one plain line shown in the gold "now" pill),
+  `lab.md` (the `/lab/` page: frontmatter `apps:` and `talks:` lists ARE the
+  data, body unused; screenshots in `lab/`, 640×400 PNG, copied to `/lab/`).
+  It is a two-column gallery of card tiles: screenshot on top · name · one
+  line · one link, nothing else (rows, audience chips and "since" years were
+  built and cut on 2026-09-19 — the tagline carries who each is for). A tile
+  without `url` is a `<div>`; without `image` it is text-only — a section
+  with an empty list is not emitted.
 - `build.js` (~300 lines, deps: marked + gray-matter) — renders everything
   to `dist/`: home (bio + now + writing-by-year + traces strip), posts,
-  archives (/blog/ + /posts/), traces w/ kind filter, tags, hikes, RSS,
+  archives (/blog/ + /posts/), traces w/ kind filter, tags, hikes, lab, RSS,
   sitemap, 404. Also emits `.sources.json` (url → content file) for dev.js.
 - `dev.js` — LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654: preview + ✎ edit button on content pages
@@ -67,8 +74,9 @@ generator.
 
 - Masthead geometry (body width/padding, wordmark size/weight) mirrors
   antifeed exactly — change in both repos or not at all.
-- Nav pattern on both sites: [content links] · [other property] · about ·
-  theme toggle. Blog nav: writing · traces · antifeed · about. antifeed
+- Nav pattern on both sites: [content links] · about · theme toggle. Blog
+  nav: writing · traces · lab · about (the antifeed slot became `lab` on
+  2026-09-19; antifeed is a lab row and the footer's "what i read"). antifeed
   links back as "kb".
 - antifeed deliberately stays on pages.dev, NOT a kaushik.sh
   subdomain — KB may spin it out as an independent product later. Don't
@@ -102,3 +110,8 @@ cache-bust when verifying.
 - WebP conversion of the eight PNGs.
 - A search page, a newsletter, comments. The blog is ~12 documents; it does
   not need a system.
+- A home-page strip pointing at `/lab/` — mocked as Frame 2 on 2026-09-19,
+  rejected. Home stays bio · now · writing · traces.
+- Lab thumbnails for kaizen and brain: KB supplies sanitised PNGs; never
+  capture them from a paired session. Talks render when `talks:` has an
+  entry — KB owes the list.
