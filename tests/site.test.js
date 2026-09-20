@@ -117,6 +117,7 @@ test("lab.md: every row has a name and a line; links are https; images exist", (
     assert.ok(e.name, `${who}: no name`);
     assert.ok(e.line, `${who}: no line — say what it is in one sentence`);
     if (e.url) assert.match(e.url, /^https:\/\//, `${who}: url must be absolute https, got ${e.url}`);
+    if (e.repo) assert.match(e.repo, /^https:\/\/github\.com\//, `${who}: repo must be a github.com URL, got ${e.repo}`);
     if (e.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "lab", e.image)), `${who}: image content/lab/${e.image} does not exist`);
   }
   for (const t of lab.talks || []) {

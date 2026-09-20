@@ -311,13 +311,12 @@ for (const pg of [about, ideas])
 const labRow = (e) => {
   const name = e.name || e.title;
   const line = e.line || e.where || "";
-  const inner = `${e.image ? `<img class="shot" src="/lab/${esc(e.image)}" alt="" loading="lazy">` : ""}
+  const ext = (href, text) => `<a class="go" href="${esc(href)}" target="_blank" rel="noopener">${esc(text)} ↗</a>`;
+  const links = [e.url ? ext(e.url, e.label || "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
+  return `<li><div class="tile">${e.image ? `<img class="shot" src="/lab/${esc(e.image)}" alt="" loading="lazy">` : ""}
     <span class="body"><span class="rt">${esc(name)}</span>
       <span class="sub">${esc(line)}</span>
-      ${e.url ? `<span class="go">${esc(e.label || "open")} ↗</span>` : ""}</span>`;
-  return e.url
-    ? `<li><a class="tile" href="${esc(e.url)}" target="_blank" rel="noopener">${inner}</a></li>`
-    : `<li><div class="tile">${inner}</div></li>`;
+      ${links ? `<span class="links">${links}</span>` : ""}</span></div></li>`;
 };
 const labSection = (label, list) => (list && list.length) ? `
 <section class="list-section">

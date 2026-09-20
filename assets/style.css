@@ -155,11 +155,12 @@ body {
 .tile .body { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.9rem 1rem 1rem; }
 .tile .rt { font-weight: 700; font-size: 1rem; line-height: 1.35; letter-spacing: -0.01em; }
 .tile .sub { color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+.tile .links { display: flex; gap: 0.9rem; margin-top: 0.5rem; }
 .tile .go {
-  margin-top: 0.5rem; background: none; padding: 0; border-radius: 0;
-  font-size: 0.82rem; font-weight: 600; color: var(--gold);
+  background: none; padding: 0; border-radius: 0;
+  font-size: 0.82rem; font-weight: 600; color: var(--gold); text-decoration: none;
 }
-a.tile:hover .rt { color: var(--gold); }
+.tile .go:hover { text-decoration: underline; }
 
 /* ---- row expansion (shared language with antifeed) ---- */
 .expand { margin: 0 0 0.9rem; animation: reveal 0.18s ease-out; cursor: default; }

@@ -44,9 +44,9 @@ generator.
   `lab.md` (the `/lab/` page: frontmatter `apps:` and `talks:` lists ARE the
   data, body unused; screenshots in `lab/`, 640×400 PNG, copied to `/lab/`).
   It is a two-column gallery of card tiles: screenshot on top · name · one
-  line · one link, nothing else (rows, audience chips and "since" years were
+  line · links (`url` → "open", `repo` → "github", public repos only), nothing else (rows, audience chips and "since" years were
   built and cut on 2026-09-19 — the tagline carries who each is for). A tile
-  without `url` is a `<div>`; without `image` it is text-only — a section
+  without links has no link row; without `image` it is text-only — a section
   with an empty list is not emitted.
 - `build.js` (~300 lines, deps: marked + gray-matter) — renders everything
   to `dist/`: home (bio + now + writing-by-year + traces strip), posts,
