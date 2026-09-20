@@ -20,6 +20,8 @@ apps:
   - name: margin
     line: A Firefox sidebar that answers your doubts in the margin of a lecture.
     repo: https://github.com/kaushikb9/margin
+  - name: traces
+    line: A shared life-log for two, drawn as one road through the years. Private.
   - name: this site
     line: Hand-rolled, no framework. One build script agents can edit.
     repo: https://github.com/kaushikb9/kb-blog
