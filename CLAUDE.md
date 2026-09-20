@@ -78,7 +78,7 @@ Rendering: dated entries newest-first, then an "undated" group (by title)
 for ones shelved before he kept dates — those move up once he backdates
 them from Slack/email. Kind filter only offers kinds that occur. Notes are
 always visible, never behind a tap. Deliberately NOT in RSS (link notes
-would spam subscribers). The intro/epigraph is `content/shelf.md`.
+would spam subscribers). The intro is `content/shelf.md`.
 
 ## Invariants (breaking these breaks inbound links/subscribers)
 
