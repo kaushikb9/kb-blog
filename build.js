@@ -37,11 +37,12 @@ function loadDoc(file, section) {
   const dir = path.dirname(file);
   const isBundle = path.basename(file) === "index.md";
   const slug = isBundle ? path.basename(dir) : path.basename(file, ".md");
-  const url = g.data.url || `/${section}/${slug}/`;
+  const external = section === "shelf"; // a shelf entry links out; it has no page of its own
+  const url = external ? null : g.data.url || `/${section}/${slug}/`;
   const assets = isBundle
     ? fs.readdirSync(dir).filter((f) => !f.endsWith(".md")).map((f) => path.join(dir, f))
     : [];
-  SOURCES[url] = path.relative(ROOT, file);
+  if (url) SOURCES[url] = path.relative(ROOT, file);
   const plain = g.content
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
@@ -55,7 +56,9 @@ function loadDoc(file, section) {
     title: g.data.title || slug,
     date: g.data.date ? new Date(g.data.date) : null,
     tags: g.data.tags || [],
-    kind: g.data.trace_kind || null,
+    kind: g.data.trace_kind || g.data.kind || null,
+    link: external ? g.data.url : null,
+    by: g.data.by || "",
     description: g.data.description || "",
     minutes: Math.max(1, Math.round(words(g.content) / 200)),
     html: marked.parse(g.content),
@@ -81,9 +84,11 @@ function loadSection(section) {
 const posts = loadSection("posts");
 const traces = loadSection("traces");
 const hikes = loadSection("hikes");
+const shelf = loadSection("shelf");
 const about = loadDoc(path.join(ROOT, "content", "about.md"), "");
 const ideas = loadDoc(path.join(ROOT, "content", "ideas.md"), "");
-about.url = "/about/"; ideas.url = "/ideas/";
+const shelfIntro = loadDoc(path.join(ROOT, "content", "shelf.md"), "");
+about.url = "/about/"; ideas.url = "/ideas/"; shelfIntro.url = "/shelf/";
 // lab: the frontmatter IS the data (apps + talks lists); the body is unused
 const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
 SOURCES["/lab/"] = "content/lab.md";
@@ -109,7 +114,7 @@ function page({ title, desc, url, body, progress = false }) {
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<meta name="theme-color" content="#7b2d8e">
+<meta name="theme-color" content="#faf8f4">
 <link rel="stylesheet" href="/style.css?v=${CSSV}">
 <script>(function(){var t=localStorage.getItem("kb:theme");if(t)document.documentElement.dataset.theme=t;})();</script>
 </head>
@@ -119,7 +124,7 @@ ${progress ? `<div id="progress"></div>` : ""}
   <a class="wordmark" href="/">kaushik<span>bhat</span></a>
   <nav>
     <a href="/">writing</a>
-    <a href="/traces/">traces</a>
+    <a href="/shelf/">shelf</a>
     <a href="/lab/">lab</a>
     <a href="/about/">about</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
@@ -129,7 +134,7 @@ ${progress ? `<div id="progress"></div>` : ""}
 ${body}
 </main>
 <footer>
-  <p>© kaushik bhat · <a href="/index.xml">rss</a> · <a href="https://antifeed.pages.dev">what i read</a></p>
+  <p>© kaushik bhat · <a href="/index.xml">rss</a></p>
 </footer>
 <script>
 document.addEventListener("click",(e)=>{
@@ -184,9 +189,24 @@ const row = (d, sub, attrs = "") => `<li class="exp" ${attrs}>
   </div>
 </li>`;
 
-/* ---------- home: bio + now + writing by year + traces strip ---------- */
+// kind filter for a list page: buttons in #navId, li[data-kind] under #listId;
+// a [data-group] wrapper (e.g. the undated shelf) hides when none of its rows show
+const filterScript = (navId, listId) => `<script>
+document.getElementById("${navId}").addEventListener("click",(e)=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#${navId} button").forEach((x)=>x.classList.toggle("active",x===b));
+  const root=document.getElementById("${listId}");
+  root.querySelectorAll("li[data-kind]").forEach((li)=>{
+    li.hidden = b.dataset.kind!=="all" && li.dataset.kind!==b.dataset.kind;
+  });
+  root.querySelectorAll("[data-group]").forEach((g)=>{
+    g.hidden = ![...g.querySelectorAll("li[data-kind]")].some((li)=>!li.hidden);
+  });
+});
+</script>`;
 
-const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲" };
+/* ---------- home: bio + now + writing by year ---------- */
+
 const now = fs.readFileSync(path.join(ROOT, "content", "now.txt"), "utf8").trim();
 const bio = marked.parse(matter(fs.readFileSync(path.join(ROOT, "content", "home.md"), "utf8")).content);
 SOURCES["/"] = "content/home.md";
@@ -212,14 +232,6 @@ out("index.html", page({
   ${Object.keys(homeYears).sort((a, b) => b - a).map((y) => `
   <h4 class="year">${y}</h4>
   <ol class="rows">${homeYears[y].map((p) => row(p, `${p.minutes} min · ${p.tags.slice(0, 3).join(" · ")}`)).join("\n")}</ol>`).join("\n")}
-</section>
-
-<section class="list-section">
-  <h3 class="section-label">traces</h3>
-  <ol class="rows">
-    ${traces.slice(0, 2).map((t) => row(t, `${KIND_GLYPHS[t.kind] || ""} ${t.kind}`)).join("\n")}
-  </ol>
-  <p class="more-link"><a href="/traces/">all traces →</a></p>
 </section>`,
 }));
 
@@ -263,15 +275,7 @@ out("traces/index.html", page({
 <ol class="rows" id="trace-list">
   ${traces.map((t) => row(t, KINDS[t.kind] || t.kind, `data-kind="${t.kind}"`)).join("\n")}
 </ol>
-<script>
-document.getElementById("filters").addEventListener("click",(e)=>{
-  const b=e.target.closest("button"); if(!b) return;
-  document.querySelectorAll("#filters button").forEach((x)=>x.classList.toggle("active",x===b));
-  document.querySelectorAll("#trace-list li").forEach((li)=>{
-    li.hidden = b.dataset.kind!=="all" && li.dataset.kind!==b.dataset.kind;
-  });
-});
-</script>`,
+${filterScript("filters", "trace-list")}`,
 }));
 for (const t of traces) {
   out(path.join(t.url.slice(1), "index.html"), page({
@@ -283,6 +287,40 @@ for (const t of traces) {
 </article>`,
   }));
 }
+
+/* ---------- shelf: links out, dated the day they were shelved ---------- */
+
+const SHELF_KINDS = ["tweet", "article", "talk", "book"]; // display order; validated by check.sh
+const shelfRow = (d) => `<li data-kind="${d.kind}">
+  <div class="row">
+    <span class="when">${d.date ? fmtDate(d.date) : ""}</span>
+    <div class="t"><a class="rt ext" href="${esc(d.link)}" rel="noopener">${esc(d.title)}</a>
+      <span class="sub">${esc(d.by)}${d.by ? " · " : ""}${esc(d.kind)}</span>
+      ${d.html.trim() ? `<div class="note prose">${d.html}</div>` : ""}</div>
+  </div>
+</li>`;
+const shelfList = (docs) => `<ol class="rows">\n${docs.map(shelfRow).join("\n")}\n</ol>`;
+const shelfDated = shelf.filter((d) => d.date);       // already newest-first
+const shelfUndated = shelf.filter((d) => !d.date)     // shelved before dates were kept: by title
+  .sort((a, b) => a.title.localeCompare(b.title));
+const shelfKinds = SHELF_KINDS.filter((k) => shelf.some((d) => d.kind === k));
+out("shelf/index.html", page({
+  title: `Shelf · ${SITE.title}`, url: "/shelf/", desc: shelfIntro.excerpt,
+  body: `<h1 class="page-title">shelf</h1>
+<div class="prose intro">${shelfIntro.html}</div>
+${shelfKinds.length > 1 ? `<nav class="filters" id="shelf-filters">
+  <button data-kind="all" class="active">all</button>
+  ${shelfKinds.map((k) => `<button data-kind="${k}">${k}</button>`).join("\n  ")}
+</nav>` : ""}
+<div id="shelf">
+${shelfDated.length ? shelfList(shelfDated) : ""}
+${shelfUndated.length ? `<section data-group="undated">
+  <h3 class="section-label">undated</h3>
+  ${shelfList(shelfUndated)}
+</section>` : ""}
+</div>
+${shelfKinds.length > 1 ? filterScript("shelf-filters", "shelf") : ""}`,
+}));
 
 /* ---------- hikes, about, ideas ---------- */
 
@@ -379,7 +417,7 @@ ${feedDocs.map((d) => `  <item>
 </channel>
 </rss>`);
 
-const urls = ["/", "/blog/", "/posts/", "/traces/", "/hikes/", "/about/", "/ideas/", "/lab/", "/tags/",
+const urls = ["/", "/blog/", "/posts/", "/traces/", "/shelf/", "/hikes/", "/about/", "/ideas/", "/lab/", "/tags/",
   ...posts.map((p) => p.url), ...traces.map((t) => t.url), ...hikes.map((h) => h.url),
   ...Object.keys(tagMap).map((t) => `/tags/${t}/`), "/us-trip-gems/"];
 out("sitemap.xml", `<?xml version="1.0" encoding="utf-8"?>
@@ -400,4 +438,4 @@ for (const f of fs.readdirSync(path.join(ROOT, "assets")))
   fs.copyFileSync(path.join(ROOT, "assets", f), path.join(DIST, f));
 
 fs.writeFileSync(path.join(ROOT, ".sources.json"), JSON.stringify(SOURCES, null, 2));
-console.log(`built: ${posts.length} posts, ${traces.length} traces, ${Object.keys(tagMap).length} tags, ${(lab.apps || []).length + (lab.talks || []).length} lab rows → dist/`);
+console.log(`built: ${posts.length} posts, ${traces.length} traces, ${shelf.length} shelf, ${Object.keys(tagMap).length} tags, ${(lab.apps || []).length + (lab.talks || []).length} lab tiles → dist/`);

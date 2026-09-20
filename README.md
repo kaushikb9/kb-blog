@@ -6,8 +6,9 @@ language to antifeed (warm paper / ink / gold).
 - `content/` — markdown with YAML frontmatter (migrated from kb-hugo,
   frontmatter normalized, one tweet shortcode replaced with a blockquote)
 - `build.js` — the entire "static site generator" (~250 lines):
-  markdown → HTML, home + archives + traces (kind filter) + tags + about/
-  ideas + hikes, RSS with GUIDs identical to the Hugo feed, sitemap, 404
+  markdown → HTML, home + archives + traces (kind filter) + shelf (links
+  out, dated notes) + tags + about/ideas + hikes, RSS with GUIDs identical
+  to the Hugo feed, sitemap, 404
 - `assets/` — one CSS file, icons
 - `static/` — robots.txt, llms.txt, us-trip-gems (passthrough)
 - `migrate.js` — one-time importer from ../kb-hugo (kept for reference)
@@ -19,8 +20,8 @@ node dev.js      # preview at localhost:8654 with in-browser editing:
 node build.js    # plain one-shot build → dist/
 ```
 
-Everything readable is markdown in `content/` — posts, traces, about,
-ideas, the home bio (`home.md`), the "now" line (`now.txt`). `dev.js` is
+Everything readable is markdown in `content/` — posts, traces, shelf
+entries, about, ideas, the home bio (`home.md`), the "now" line (`now.txt`). `dev.js` is
 LOCAL ONLY (binds 127.0.0.1, writes files) — never deploy it; production
 is just the static `dist/`.
 

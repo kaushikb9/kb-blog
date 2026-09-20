@@ -133,10 +133,10 @@ body {
   padding: 0.85rem 0; text-decoration: none; color: inherit;
 }
 .rows .when {
-  color: var(--muted); font-size: 0.78rem; white-space: nowrap;
+  color: var(--muted); font-size: 0.78rem; white-space: nowrap; flex: none;
   font-variant-numeric: tabular-nums; min-width: 6.2em;
 }
-.rows .t { display: flex; flex-direction: column; gap: 0.1rem; }
+.rows .t { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; min-width: 0; }
 .rows .rt {
   font-weight: 600; font-size: 0.98rem; line-height: 1.35;
   color: inherit; text-decoration: none;
@@ -181,6 +181,14 @@ body {
   padding: 0.25rem 0.55rem; border-radius: 8px;
 }
 .filters button.active { background: var(--gold-soft); color: var(--gold); }
+
+/* ---- shelf: rows that link out, note always visible ---- */
+.prose.intro { font-size: 0.95rem; color: var(--muted); margin-bottom: 1.5rem; }
+.prose.intro p { margin-bottom: 0.75rem; }
+.rows .ext::after { content: "\a0\2197"; color: var(--muted); font-weight: 500; font-size: 0.8em; }
+.rows .note { font-size: 0.92rem; line-height: 1.55; margin-top: 0.35rem; }
+.rows .note p, .rows .note blockquote { margin-bottom: 0.4rem; }
+.rows .note > :last-child { margin-bottom: 0; }
 
 /* ---- prose (posts) ---- */
 .prose { font-size: 1.02rem; }

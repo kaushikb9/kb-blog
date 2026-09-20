@@ -39,7 +39,7 @@ before(() => {
 
 test("build emits every route the old site had", () => {
   for (const need of ["/index.html", "/index.xml", "/sitemap.xml", "/404.html", "/_redirects",
-                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/lab/index.html", "/traces/index.html", "/tags/index.html"])
+                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/traces/index.html", "/shelf/index.html", "/lab/index.html", "/tags/index.html"])
     assert.ok(exists.has(need), `dist${need} not emitted by build.js`);
   assert.ok(redirects.length > 0, "static/_redirects is empty — the retired Hugo routes must keep 301ing");
 });
@@ -93,12 +93,12 @@ test("tag URLs are slugified the way Hugo did", () => {
   }
 });
 
-test("every post and trace has a title and a date; no Hugo branch bundles", () => {
-  (function walk(d) {
+test("every post, trace and hike has a title and a date; no Hugo branch bundles", () => {
+  for (const section of ["posts", "traces", "hikes"]) (function walk(d) {
     for (const e of fs.readdirSync(d, { withFileTypes: true })) {
       const p = path.join(d, e.name);
       if (e.isDirectory()) walk(p);
-      else if (e.name.endsWith(".md") && !/^(about|ideas|home|lab)\.md$/.test(e.name)) {
+      else if (e.name.endsWith(".md")) {
         const r = path.relative(ROOT, p);
         assert.notEqual(e.name, "_index.md", `${r}: _index.md is a Hugo branch bundle — use index.md, or RSS silently drops it`);
         const g = matter(fs.readFileSync(p, "utf8"));
@@ -106,7 +106,40 @@ test("every post and trace has a title and a date; no Hugo branch bundles", () =
         assert.ok(g.data.date && !isNaN(new Date(g.data.date)), `${r}: frontmatter date is missing or unparseable (${g.data.date})`);
       }
     }
-  })(path.join(ROOT, "content"));
+  })(path.join(ROOT, "content", section));
+});
+
+const SHELF_KINDS = ["tweet", "article", "talk", "book"];
+const shelfEntries = () => fs.readdirSync(path.join(ROOT, "content", "shelf")).filter((f) => f.endsWith(".md"))
+  .map((f) => ({ file: `content/shelf/${f}`, ...matter(fs.readFileSync(path.join(ROOT, "content", "shelf", f), "utf8")).data }));
+
+test("every shelf entry has a title, an http(s) url and a known kind; a date, if given, parses", () => {
+  const entries = shelfEntries();
+  assert.ok(entries.length > 0, "content/shelf/ has no entries");
+  for (const e of entries) {
+    assert.ok(e.title, `${e.file}: frontmatter has no title`);
+    assert.match(String(e.url || ""), /^https?:\/\//, `${e.file}: url must be an absolute http(s) link (got ${e.url})`);
+    assert.ok(SHELF_KINDS.includes(e.kind), `${e.file}: kind "${e.kind}" is not one of ${SHELF_KINDS.join("|")}`);
+    if (e.date !== undefined)
+      assert.ok(!isNaN(new Date(e.date)), `${e.file}: date is unparseable (${e.date}) — omit it if unknown, never guess`);
+  }
+});
+
+test("shelf page links every entry; shelf is never in the feed", () => {
+  const src = fs.readFileSync(path.join(DIST, "shelf", "index.html"), "utf8");
+  for (const e of shelfEntries())
+    assert.ok(src.includes(`href="${e.url.replace(/&/g, "&amp;")}"`), `${e.file}: ${e.url} is not linked from /shelf/`);
+  for (const it of items) {
+    const link = (it.match(/<link>(.*?)<\/link>/) || [])[1];
+    assert.ok(!link.startsWith(BASE + "/shelf/"), `feed item ${link} — shelf entries are not feed items by design`);
+  }
+});
+
+test("shelf filter only offers kinds that have entries", () => {
+  const src = fs.readFileSync(path.join(DIST, "shelf", "index.html"), "utf8");
+  const present = new Set(shelfEntries().map((e) => e.kind));
+  for (const m of src.matchAll(/<button data-kind="([a-z]+)"/g))
+    assert.ok(m[1] === "all" || present.has(m[1]), `/shelf/ offers a "${m[1]}" filter but no entry has that kind`);
 });
 
 test("lab.md: every row has a name and a line; links are https; images exist", () => {
