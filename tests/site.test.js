@@ -39,7 +39,7 @@ before(() => {
 
 test("build emits every route the old site had", () => {
   for (const need of ["/index.html", "/index.xml", "/sitemap.xml", "/404.html", "/_redirects",
-                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/traces/index.html", "/shelf/index.html", "/tags/index.html"])
+                      "/blog/index.html", "/posts/index.html", "/about/index.html", "/ideas/index.html", "/traces/index.html", "/shelf/index.html", "/lab/index.html", "/tags/index.html"])
     assert.ok(exists.has(need), `dist${need} not emitted by build.js`);
   assert.ok(redirects.length > 0, "static/_redirects is empty — the retired Hugo routes must keep 301ing");
 });
@@ -140,4 +140,33 @@ test("shelf filter only offers kinds that have entries", () => {
   const present = new Set(shelfEntries().map((e) => e.kind));
   for (const m of src.matchAll(/<button data-kind="([a-z]+)"/g))
     assert.ok(m[1] === "all" || present.has(m[1]), `/shelf/ offers a "${m[1]}" filter but no entry has that kind`);
+});
+
+test("lab.md: every row has a name and a line; links are https; images exist", () => {
+  const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
+  assert.ok(Array.isArray(lab.apps) && lab.apps.length > 0, "content/lab.md: apps is empty — the page would render with no rows");
+  for (const e of lab.apps) {
+    const who = `content/lab.md app "${e.name || "?"}"`;
+    assert.ok(e.name, `${who}: no name`);
+    assert.ok(e.line, `${who}: no line — say what it is in one sentence`);
+    if (e.url) assert.match(e.url, /^https:\/\//, `${who}: url must be absolute https, got ${e.url}`);
+    if (e.repo) assert.match(e.repo, /^https:\/\/github\.com\//, `${who}: repo must be a github.com URL, got ${e.repo}`);
+    if (e.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "lab", e.image)), `${who}: image content/lab/${e.image} does not exist`);
+  }
+  for (const t of lab.talks || []) {
+    const who = `content/lab.md talk "${t.title || "?"}"`;
+    assert.ok(t.title, `${who}: no title`);
+    assert.ok(t.url, `${who}: no url — a talk row exists to link slides or video`);
+    if (t.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "lab", t.image)), `${who}: image content/lab/${t.image} does not exist`);
+  }
+});
+
+test("lab page emits a section only for a non-empty list", () => {
+  const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
+  const src = fs.readFileSync(path.join(DIST, "lab", "index.html"), "utf8");
+  for (const [key, label] of [["apps", "apps"], ["talks", "talks"]]) {
+    const has = src.includes(`<h3 class="section-label">${label}</h3>`);
+    const want = (lab[key] || []).length > 0;
+    assert.equal(has, want, `/lab/: "${label}" section ${has ? "rendered" : "missing"} but ${key} has ${(lab[key] || []).length} rows — never pad a section`);
+  }
 });
