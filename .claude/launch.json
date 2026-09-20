@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "kb-blog-dev", "runtimeExecutable": "node", "runtimeArgs": ["dev.js"], "port": 8654 }
+  ]
+}

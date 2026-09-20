@@ -8,6 +8,7 @@ This is the personal website of Kaushik Bhat — an engineering leader based in 
 
 - [Blog](https://kaushik.sh/blog/): Long-form posts on engineering leadership, career growth, AI strategy, and productivity
 - [Traces](https://kaushik.sh/traces/): Short-form thought captures — ideas, things I learned, wins
+- [Shelf](https://kaushik.sh/shelf/): Tweets, articles, talks and books that got me thinking, with the date I shelved each and a note on why
 - [About](https://kaushik.sh/about/): Bio and contact info
 - [Ideas](https://kaushik.sh/ideas/): Public list of ideas and things to explore
 

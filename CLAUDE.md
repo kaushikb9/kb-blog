@@ -23,8 +23,11 @@ npm run deploy   # ./check.sh && wrangler pages deploy dist  (only when KB asks;
 emitted; every internal link resolves (or is a `_redirects` source); every RSS
 GUID equals its permalink and every feed/sitemap entry is a real page; the
 `style.css?v=` hash matches the CSS that shipped; tag URLs are slugified;
-every post/trace has a title and a parseable date and no `_index.md`. Hand
-work back only after it passes.
+every post/trace has a title and a parseable date and no `_index.md`; every
+shelf entry has a title, an http(s) url, a known kind and (if given) a
+parseable date, is linked from `/shelf/` and is absent from the feed. Hand
+work back only after it passes. Don't run it while `npm run dev` is up —
+the watch-rebuild races the test build and produces phantom failures.
 
 ## Why it's built this way
 
@@ -39,12 +42,13 @@ generator.
 - `content/` — ALL prose is markdown + YAML frontmatter: `posts/` (page
   bundles or flat files), `traces/` (short notes, `trace_kind`:
   spark/reflect/peak — "flag" was dropped 2026-07-25, unused), `hikes/`,
+  `shelf/` (links out — see below), `shelf.md` (the shelf page's intro),
   `about.md`, `ideas.md` (page exists, deliberately NOT in nav), `home.md`
   (the bio), `now.txt` (one plain line shown in the gold "now" pill).
-- `build.js` (~300 lines, deps: marked + gray-matter) — renders everything
+- `build.js` (~330 lines, deps: marked + gray-matter) — renders everything
   to `dist/`: home (bio + now + writing-by-year + traces strip), posts,
-  archives (/blog/ + /posts/), traces w/ kind filter, tags, hikes, RSS,
-  sitemap, 404. Also emits `.sources.json` (url → content file) for dev.js.
+  archives (/blog/ + /posts/), traces w/ kind filter, shelf, tags, hikes,
+  RSS, sitemap, 404. Also emits `.sources.json` (url → content file) for dev.js.
 - `dev.js` — LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654: preview + ✎ edit button on content pages
   (markdown textarea → Save & rebuild) + watch-rebuild on file changes.
@@ -52,10 +56,35 @@ generator.
   `_redirects`, us-trip-gems (passthrough).
 - `migrate.js` — the one-time Hugo importer; historical reference only.
 
+### The shelf (`/shelf/`, added 2026-09-20)
+
+Tweets, articles, talks and books that got KB thinking, each with the date
+he shelved it and a note on why — a journal of taste, not a bookmarks dump.
+One file per entry, `content/shelf/<slug>.md` (no date prefix; the date is
+frontmatter because it gets filled in later):
+
+```yaml
+---
+title: "Build a great product and get users and win"
+url: https://x.com/sama/status/630869612536725504   # links OUT; no page of its own
+by: Sam Altman
+kind: tweet          # tweet | article | talk | book — check.sh rejects anything else
+date: 2026-09-20     # the day KB shelved it. OMIT if unknown — never guess a date
+---
+The note, in KB's words. Markdown. Empty is allowed (the row just has no note).
+```
+
+Rendering: dated entries newest-first, then an "undated" group (by title)
+for ones shelved before he kept dates — those move up once he backdates
+them from Slack/email. Kind filter only offers kinds that occur. Notes are
+always visible, never behind a tap. Deliberately NOT in RSS (link notes
+would spam subscribers). The intro/epigraph is `content/shelf.md`.
+
 ## Invariants (breaking these breaks inbound links/subscribers)
 
 - URLs: `/posts/<slug>/`, `/traces/<date-prefixed-slug>/`, `/about/`,
   `/ideas/`, `/blog/`, `/tags/<slug>/` — parity with the old Hugo site.
+  `/shelf/` (2026-09-20) has no per-entry pages.
 - RSS `/index.xml`: GUID = full permalink (Hugo-compatible). Don't change
   GUIDs of existing entries — subscribers would see re-delivery.
 - Tag URLs are SLUGIFIED (`"AI tools"` → `/tags/ai-tools/`) exactly because
@@ -68,8 +97,8 @@ generator.
 - Masthead geometry (body width/padding, wordmark size/weight) mirrors
   antifeed exactly — change in both repos or not at all.
 - Nav pattern on both sites: [content links] · [other property] · about ·
-  theme toggle. Blog nav: writing · traces · antifeed · about. antifeed
-  links back as "kb".
+  theme toggle. Blog nav: writing · traces · shelf · antifeed · about.
+  antifeed links back as "kb".
 - antifeed deliberately stays on pages.dev, NOT a kaushik.sh
   subdomain — KB may spin it out as an independent product later. Don't
   "helpfully" suggest the subdomain again.
@@ -102,3 +131,6 @@ cache-bust when verifying.
 - WebP conversion of the eight PNGs.
 - A search page, a newsletter, comments. The blog is ~12 documents; it does
   not need a system.
+- Shelf extras: per-entry pages, a shelf-only feed, theme grouping, and an
+  antifeed → shelf hand-off. KB mentioned the last one as "maybe later";
+  it is not a yes.

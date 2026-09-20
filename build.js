@@ -37,11 +37,12 @@ function loadDoc(file, section) {
   const dir = path.dirname(file);
   const isBundle = path.basename(file) === "index.md";
   const slug = isBundle ? path.basename(dir) : path.basename(file, ".md");
-  const url = g.data.url || `/${section}/${slug}/`;
+  const external = section === "shelf"; // a shelf entry links out; it has no page of its own
+  const url = external ? null : g.data.url || `/${section}/${slug}/`;
   const assets = isBundle
     ? fs.readdirSync(dir).filter((f) => !f.endsWith(".md")).map((f) => path.join(dir, f))
     : [];
-  SOURCES[url] = path.relative(ROOT, file);
+  if (url) SOURCES[url] = path.relative(ROOT, file);
   const plain = g.content
     .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
     .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
@@ -55,7 +56,9 @@ function loadDoc(file, section) {
     title: g.data.title || slug,
     date: g.data.date ? new Date(g.data.date) : null,
     tags: g.data.tags || [],
-    kind: g.data.trace_kind || null,
+    kind: g.data.trace_kind || g.data.kind || null,
+    link: external ? g.data.url : null,
+    by: g.data.by || "",
     description: g.data.description || "",
     minutes: Math.max(1, Math.round(words(g.content) / 200)),
     html: marked.parse(g.content),
@@ -81,9 +84,11 @@ function loadSection(section) {
 const posts = loadSection("posts");
 const traces = loadSection("traces");
 const hikes = loadSection("hikes");
+const shelf = loadSection("shelf");
 const about = loadDoc(path.join(ROOT, "content", "about.md"), "");
 const ideas = loadDoc(path.join(ROOT, "content", "ideas.md"), "");
-about.url = "/about/"; ideas.url = "/ideas/";
+const shelfIntro = loadDoc(path.join(ROOT, "content", "shelf.md"), "");
+about.url = "/about/"; ideas.url = "/ideas/"; shelfIntro.url = "/shelf/";
 
 /* ---------- layout ---------- */
 
@@ -117,6 +122,7 @@ ${progress ? `<div id="progress"></div>` : ""}
   <nav>
     <a href="/">writing</a>
     <a href="/traces/">traces</a>
+    <a href="/shelf/">shelf</a>
     <a href="https://antifeed.pages.dev">antifeed</a>
     <a href="/about/">about</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
@@ -180,6 +186,22 @@ const row = (d, sub, attrs = "") => `<li class="exp" ${attrs}>
     </article>
   </div>
 </li>`;
+
+// kind filter for a list page: buttons in #navId, li[data-kind] under #listId;
+// a [data-group] wrapper (e.g. the undated shelf) hides when none of its rows show
+const filterScript = (navId, listId) => `<script>
+document.getElementById("${navId}").addEventListener("click",(e)=>{
+  const b=e.target.closest("button"); if(!b) return;
+  document.querySelectorAll("#${navId} button").forEach((x)=>x.classList.toggle("active",x===b));
+  const root=document.getElementById("${listId}");
+  root.querySelectorAll("li[data-kind]").forEach((li)=>{
+    li.hidden = b.dataset.kind!=="all" && li.dataset.kind!==b.dataset.kind;
+  });
+  root.querySelectorAll("[data-group]").forEach((g)=>{
+    g.hidden = ![...g.querySelectorAll("li[data-kind]")].some((li)=>!li.hidden);
+  });
+});
+</script>`;
 
 /* ---------- home: bio + now + writing by year + traces strip ---------- */
 
@@ -260,15 +282,7 @@ out("traces/index.html", page({
 <ol class="rows" id="trace-list">
   ${traces.map((t) => row(t, KINDS[t.kind] || t.kind, `data-kind="${t.kind}"`)).join("\n")}
 </ol>
-<script>
-document.getElementById("filters").addEventListener("click",(e)=>{
-  const b=e.target.closest("button"); if(!b) return;
-  document.querySelectorAll("#filters button").forEach((x)=>x.classList.toggle("active",x===b));
-  document.querySelectorAll("#trace-list li").forEach((li)=>{
-    li.hidden = b.dataset.kind!=="all" && li.dataset.kind!==b.dataset.kind;
-  });
-});
-</script>`,
+${filterScript("filters", "trace-list")}`,
 }));
 for (const t of traces) {
   out(path.join(t.url.slice(1), "index.html"), page({
@@ -280,6 +294,40 @@ for (const t of traces) {
 </article>`,
   }));
 }
+
+/* ---------- shelf: links out, dated the day they were shelved ---------- */
+
+const SHELF_KINDS = ["tweet", "article", "talk", "book"]; // display order; validated by check.sh
+const shelfRow = (d) => `<li data-kind="${d.kind}">
+  <div class="row">
+    <span class="when">${d.date ? fmtDate(d.date) : ""}</span>
+    <div class="t"><a class="rt ext" href="${esc(d.link)}" rel="noopener">${esc(d.title)}</a>
+      <span class="sub">${esc(d.by)}${d.by ? " · " : ""}${esc(d.kind)}</span>
+      ${d.html.trim() ? `<div class="note prose">${d.html}</div>` : ""}</div>
+  </div>
+</li>`;
+const shelfList = (docs) => `<ol class="rows">\n${docs.map(shelfRow).join("\n")}\n</ol>`;
+const shelfDated = shelf.filter((d) => d.date);       // already newest-first
+const shelfUndated = shelf.filter((d) => !d.date)     // shelved before dates were kept: by title
+  .sort((a, b) => a.title.localeCompare(b.title));
+const shelfKinds = SHELF_KINDS.filter((k) => shelf.some((d) => d.kind === k));
+out("shelf/index.html", page({
+  title: `Shelf · ${SITE.title}`, url: "/shelf/", desc: shelfIntro.excerpt,
+  body: `<h1 class="page-title">shelf</h1>
+<div class="prose intro">${shelfIntro.html}</div>
+${shelfKinds.length > 1 ? `<nav class="filters" id="shelf-filters">
+  <button data-kind="all" class="active">all</button>
+  ${shelfKinds.map((k) => `<button data-kind="${k}">${k}</button>`).join("\n  ")}
+</nav>` : ""}
+<div id="shelf">
+${shelfDated.length ? shelfList(shelfDated) : ""}
+${shelfUndated.length ? `<section data-group="undated">
+  <h3 class="section-label">undated</h3>
+  ${shelfList(shelfUndated)}
+</section>` : ""}
+</div>
+${shelfKinds.length > 1 ? filterScript("shelf-filters", "shelf") : ""}`,
+}));
 
 /* ---------- hikes, about, ideas ---------- */
 
@@ -350,7 +398,7 @@ ${feedDocs.map((d) => `  <item>
 </channel>
 </rss>`);
 
-const urls = ["/", "/blog/", "/posts/", "/traces/", "/hikes/", "/about/", "/ideas/", "/tags/",
+const urls = ["/", "/blog/", "/posts/", "/traces/", "/shelf/", "/hikes/", "/about/", "/ideas/", "/tags/",
   ...posts.map((p) => p.url), ...traces.map((t) => t.url), ...hikes.map((h) => h.url),
   ...Object.keys(tagMap).map((t) => `/tags/${t}/`), "/us-trip-gems/"];
 out("sitemap.xml", `<?xml version="1.0" encoding="utf-8"?>
@@ -371,4 +419,4 @@ for (const f of fs.readdirSync(path.join(ROOT, "assets")))
   fs.copyFileSync(path.join(ROOT, "assets", f), path.join(DIST, f));
 
 fs.writeFileSync(path.join(ROOT, ".sources.json"), JSON.stringify(SOURCES, null, 2));
-console.log(`built: ${posts.length} posts, ${traces.length} traces, ${Object.keys(tagMap).length} tags → dist/`);
+console.log(`built: ${posts.length} posts, ${traces.length} traces, ${shelf.length} shelf, ${Object.keys(tagMap).length} tags → dist/`);
