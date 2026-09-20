@@ -121,9 +121,7 @@ ${progress ? `<div id="progress"></div>` : ""}
   <a class="wordmark" href="/">kaushik<span>bhat</span></a>
   <nav>
     <a href="/">writing</a>
-    <a href="/traces/">traces</a>
     <a href="/shelf/">shelf</a>
-    <a href="https://antifeed.pages.dev">antifeed</a>
     <a href="/about/">about</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
   </nav>
@@ -132,7 +130,7 @@ ${progress ? `<div id="progress"></div>` : ""}
 ${body}
 </main>
 <footer>
-  <p>© kaushik bhat · <a href="/index.xml">rss</a> · <a href="https://antifeed.pages.dev">what i read</a></p>
+  <p>© kaushik bhat · <a href="/index.xml">rss</a></p>
 </footer>
 <script>
 document.addEventListener("click",(e)=>{
@@ -203,9 +201,8 @@ document.getElementById("${navId}").addEventListener("click",(e)=>{
 });
 </script>`;
 
-/* ---------- home: bio + now + writing by year + traces strip ---------- */
+/* ---------- home: bio + now + writing by year ---------- */
 
-const KIND_GLYPHS = { spark: "✦", reflect: "☾", peak: "▲" };
 const now = fs.readFileSync(path.join(ROOT, "content", "now.txt"), "utf8").trim();
 const bio = marked.parse(matter(fs.readFileSync(path.join(ROOT, "content", "home.md"), "utf8")).content);
 SOURCES["/"] = "content/home.md";
@@ -231,14 +228,6 @@ out("index.html", page({
   ${Object.keys(homeYears).sort((a, b) => b - a).map((y) => `
   <h4 class="year">${y}</h4>
   <ol class="rows">${homeYears[y].map((p) => row(p, `${p.minutes} min · ${p.tags.slice(0, 3).join(" · ")}`)).join("\n")}</ol>`).join("\n")}
-</section>
-
-<section class="list-section">
-  <h3 class="section-label">traces</h3>
-  <ol class="rows">
-    ${traces.slice(0, 2).map((t) => row(t, `${KIND_GLYPHS[t.kind] || ""} ${t.kind}`)).join("\n")}
-  </ol>
-  <p class="more-link"><a href="/traces/">all traces →</a></p>
 </section>`,
 }));
 

@@ -46,7 +46,7 @@ generator.
   `about.md`, `ideas.md` (page exists, deliberately NOT in nav), `home.md`
   (the bio), `now.txt` (one plain line shown in the gold "now" pill).
 - `build.js` (~330 lines, deps: marked + gray-matter) — renders everything
-  to `dist/`: home (bio + now + writing-by-year + traces strip), posts,
+  to `dist/`: home (bio + now + writing-by-year), posts,
   archives (/blog/ + /posts/), traces w/ kind filter, shelf, tags, hikes,
   RSS, sitemap, 404. Also emits `.sources.json` (url → content file) for dev.js.
 - `dev.js` — LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
@@ -97,8 +97,14 @@ would spam subscribers). The intro/epigraph is `content/shelf.md`.
 - Masthead geometry (body width/padding, wordmark size/weight) mirrors
   antifeed exactly — change in both repos or not at all.
 - Nav pattern on both sites: [content links] · [other property] · about ·
-  theme toggle. Blog nav: writing · traces · shelf · antifeed · about.
-  antifeed links back as "kb".
+  theme toggle. Blog nav (since 2026-09-20): writing · shelf · about. The
+  "other property" slot is empty on purpose: antifeed was dropped from the
+  nav and footer, and **labs** will take the slot when there is something
+  to link. antifeed still links back as "kb".
+- Traces are unlinked, not gone: `/traces/` pages, the tag pages and the
+  feed entries keep serving (URL/GUID invariants above) but nothing links
+  to them from nav or home. They move to their own subdomain once the
+  traces app is built (see ~/Code/traces); don't put them back in the nav.
 - antifeed deliberately stays on pages.dev, NOT a kaushik.sh
   subdomain — KB may spin it out as an independent product later. Don't
   "helpfully" suggest the subdomain again.
