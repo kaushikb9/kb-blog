@@ -1,7 +1,7 @@
 ---
-title: Lab
+title: Projects
 tagline: Apps I built for my everyday use. Some are open; some are built just for friends and family.
-# Each app row: name, line required; url, repo (public GitHub only), image optional. image lives in content/lab/.
+# Each app row: name, line required; url, repo (public GitHub only), image optional. image lives in content/projects/.
 apps:
   - name: antifeed
     line: One good read a day, curated overnight. No feed, no scroll.

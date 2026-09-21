@@ -45,8 +45,8 @@ generator.
   `shelf/` (links out — see below), `shelf.md` (the shelf page's intro),
   `about.md`, `ideas.md` (page exists, deliberately NOT in nav), `home.md`
   (the bio), `now.txt` (one plain line shown in the gold "now" pill),
-  `lab.md` (the `/lab/` page: frontmatter `apps:` and `talks:` lists ARE the
-  data, body unused; screenshots in `lab/`, 640×400 PNG, copied to `/lab/`).
+  `projects.md` (the `/projects/` page: frontmatter `apps:` and `talks:` lists ARE the
+  data, body unused; screenshots in `projects/`, 640×400 PNG, copied to `/projects/`).
   It is a two-column gallery of card tiles: screenshot on top · name · one
   line · links (`url` → "open", `repo` → "github", public repos only),
   nothing else (rows, audience chips and "since" years were built and cut on
@@ -55,7 +55,7 @@ generator.
   empty list is not emitted.
 - `build.js` (~370 lines, deps: marked + gray-matter) — renders everything
   to `dist/`: home (bio + now + writing-by-year), posts,
-  archives (/blog/ + /posts/), traces w/ kind filter, shelf, lab, tags, hikes,
+  archives (/blog/ + /posts/), traces w/ kind filter, shelf, projects, tags, hikes,
   RSS, sitemap, 404. Also emits `.sources.json` (url → content file) for dev.js.
 - `dev.js` — LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654: preview + ✎ edit button on content pages
@@ -105,9 +105,9 @@ would spam subscribers). The intro is `content/shelf.md`.
 - Masthead geometry (body width/padding, wordmark size/weight) mirrors
   antifeed exactly — change in both repos or not at all.
 - Nav pattern on both sites: [content links] · [other property] · about ·
-  theme toggle. Blog nav (since 2026-09-20): writing · shelf · lab · about.
-  `lab` took the "other property" slot: antifeed was dropped from the nav
-  and footer and is now a lab tile. antifeed still links back as "kb".
+  theme toggle. Blog nav (since 2026-09-20): writing · shelf · projects · about.
+  `projects` took the "other property" slot: antifeed was dropped from the nav
+  and footer and is now a projects tile. antifeed still links back as "kb".
 - Traces are unlinked, not gone: `/traces/` pages, the tag pages and the
   feed entries keep serving (URL/GUID invariants above) but nothing links
   to them from nav or home. They move to their own subdomain once the
@@ -147,8 +147,8 @@ cache-bust when verifying.
 - Shelf extras: per-entry pages, a shelf-only feed, theme grouping, and an
   antifeed → shelf hand-off. KB mentioned the last one as "maybe later";
   it is not a yes.
-- A home-page strip pointing at `/lab/` — mocked as Frame 2 on 2026-09-19,
+- A home-page strip pointing at `/projects/` — mocked as Frame 2 on 2026-09-19,
   rejected. Home stays bio · now · writing.
-- Lab thumbnails for kaizen and brain: KB supplies sanitised PNGs; never
+- Projects thumbnails for kaizen and brain: KB supplies sanitised PNGs; never
   capture them from a paired session. Talks render when `talks:` has an
   entry — KB owes the list.

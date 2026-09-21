@@ -89,9 +89,9 @@ const about = loadDoc(path.join(ROOT, "content", "about.md"), "");
 const ideas = loadDoc(path.join(ROOT, "content", "ideas.md"), "");
 const shelfIntro = loadDoc(path.join(ROOT, "content", "shelf.md"), "");
 about.url = "/about/"; ideas.url = "/ideas/"; shelfIntro.url = "/shelf/";
-// lab: the frontmatter IS the data (apps + talks lists); the body is unused
-const lab = matter(fs.readFileSync(path.join(ROOT, "content", "lab.md"), "utf8")).data;
-SOURCES["/lab/"] = "content/lab.md";
+// projects: the frontmatter IS the data (apps + talks lists); the body is unused
+const projects = matter(fs.readFileSync(path.join(ROOT, "content", "projects.md"), "utf8")).data;
+SOURCES["/projects/"] = "content/projects.md";
 
 /* ---------- layout ---------- */
 
@@ -125,7 +125,7 @@ ${progress ? `<div id="progress"></div>` : ""}
   <nav>
     <a href="/">writing</a>
     <a href="/shelf/">shelf</a>
-    <a href="/lab/">lab</a>
+    <a href="/projects/">projects</a>
     <a href="/about/">about</a>
     <button id="theme-btn" aria-label="toggle theme"></button>
   </nav>
@@ -344,30 +344,30 @@ for (const pg of [about, ideas])
     body: `<article class="prose"><h1>${esc(pg.title)}</h1>${pg.html}</article>`,
   }));
 
-/* ---------- lab: a gallery of tiles, one per app or talk ---------- */
+/* ---------- projects: a gallery of tiles, one per app or talk ---------- */
 
-const labRow = (e) => {
+const projectTile = (e) => {
   const name = e.name || e.title;
   const line = e.line || e.where || "";
   const ext = (href, text) => `<a class="go" href="${esc(href)}" target="_blank" rel="noopener">${esc(text)} ↗</a>`;
   const links = [e.url ? ext(e.url, e.label || "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
-  return `<li><div class="tile">${e.image ? `<img class="shot" src="/lab/${esc(e.image)}" alt="" loading="lazy">` : ""}
+  return `<li><div class="tile">${e.image ? `<img class="shot" src="/projects/${esc(e.image)}" alt="" loading="lazy">` : ""}
     <span class="body"><span class="rt">${esc(name)}</span>
       <span class="sub">${esc(line)}</span>
       ${links ? `<span class="links">${links}</span>` : ""}</span></div></li>`;
 };
-const labSection = (label, list) => (list && list.length) ? `
+const projectSection = (label, list) => (list && list.length) ? `
 <section class="list-section">
   <h3 class="section-label">${label}</h3>
-  <ol class="lab">${list.map(labRow).join("\n")}</ol>
+  <ol class="projects">${list.map(projectTile).join("\n")}</ol>
 </section>` : "";
-out("lab/index.html", page({
-  title: `${lab.title} · ${SITE.title}`, url: "/lab/", desc: lab.tagline,
-  body: `<h1 class="page-title">${esc(lab.title)}</h1>
-<p class="tagline">${esc(lab.tagline)}</p>${labSection("apps", lab.apps)}${labSection("talks", lab.talks)}`,
+out("projects/index.html", page({
+  title: `${projects.title} · ${SITE.title}`, url: "/projects/", desc: projects.tagline,
+  body: `<h1 class="page-title">${esc(projects.title)}</h1>
+<p class="tagline">${esc(projects.tagline)}</p>${projectSection("apps", projects.apps)}${projectSection("talks", projects.talks)}`,
 }));
-for (const f of fs.readdirSync(path.join(ROOT, "content", "lab")))
-  fs.copyFileSync(path.join(ROOT, "content", "lab", f), path.join(DIST, "lab", f));
+for (const f of fs.readdirSync(path.join(ROOT, "content", "projects")))
+  fs.copyFileSync(path.join(ROOT, "content", "projects", f), path.join(DIST, "projects", f));
 
 /* ---------- tags ---------- */
 
@@ -417,7 +417,7 @@ ${feedDocs.map((d) => `  <item>
 </channel>
 </rss>`);
 
-const urls = ["/", "/blog/", "/posts/", "/traces/", "/shelf/", "/hikes/", "/about/", "/ideas/", "/lab/", "/tags/",
+const urls = ["/", "/blog/", "/posts/", "/traces/", "/shelf/", "/hikes/", "/about/", "/ideas/", "/projects/", "/tags/",
   ...posts.map((p) => p.url), ...traces.map((t) => t.url), ...hikes.map((h) => h.url),
   ...Object.keys(tagMap).map((t) => `/tags/${t}/`), "/us-trip-gems/"];
 out("sitemap.xml", `<?xml version="1.0" encoding="utf-8"?>
@@ -438,4 +438,4 @@ for (const f of fs.readdirSync(path.join(ROOT, "assets")))
   fs.copyFileSync(path.join(ROOT, "assets", f), path.join(DIST, f));
 
 fs.writeFileSync(path.join(ROOT, ".sources.json"), JSON.stringify(SOURCES, null, 2));
-console.log(`built: ${posts.length} posts, ${traces.length} traces, ${shelf.length} shelf, ${Object.keys(tagMap).length} tags, ${(lab.apps || []).length + (lab.talks || []).length} lab tiles → dist/`);
+console.log(`built: ${posts.length} posts, ${traces.length} traces, ${shelf.length} shelf, ${Object.keys(tagMap).length} tags, ${(projects.apps || []).length + (projects.talks || []).length} projects tiles → dist/`);

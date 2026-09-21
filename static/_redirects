@@ -5,3 +5,4 @@
 /social/* / 301
 /tags/influence/ /tags/ 301
 /tags/visibility/ /tags/ 301
+/lab/*  /projects/:splat  301

@@ -144,8 +144,8 @@ body {
 .rows .rt:hover, .rows .row:hover .rt { color: var(--gold); }
 .rows .sub { color: var(--muted); font-size: 0.8rem; }
 
-/* ---- lab: gallery of tiles (card language), image on top when there is one ---- */
-.lab { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; align-items: start; }
+/* ---- projects: gallery of tiles (card language), image on top when there is one ---- */
+.projects { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; align-items: start; }
 .tile {
   display: flex; flex-direction: column; overflow: hidden; height: 100%;
   background: var(--card); border: 1px solid var(--line); border-radius: 14px;
@@ -236,5 +236,5 @@ footer a:hover { text-decoration: underline; }
   body { padding: 1.5rem 1rem 3rem; }
   .card { padding: 1.15rem 1.1rem 1rem; }
   .rows .when { min-width: 5em; }
-  .lab { grid-template-columns: 1fr; }
+  .projects { grid-template-columns: 1fr; }
 }
