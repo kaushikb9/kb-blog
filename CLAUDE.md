@@ -67,7 +67,7 @@ generator.
 ### The shelf (`/shelf/`, added 2026-09-20)
 
 Tweets, articles, talks and books that got KB thinking, each with the date
-he shelved it and a note on why — a journal of taste, not a bookmarks dump.
+he found it and a note on why — a journal of taste, not a bookmarks dump.
 One file per entry, `content/shelf/<slug>.md` (no date prefix; the date is
 frontmatter because it gets filled in later):
 
@@ -77,13 +77,13 @@ title: "Build a great product and get users and win"
 url: https://x.com/sama/status/630869612536725504   # links OUT; no page of its own
 by: Sam Altman
 kind: tweet          # tweet | article | talk | book — check.sh rejects anything else
-date: 2026-09-20     # the day KB shelved it. OMIT if unknown — never guess a date
+date: 2026-09-20     # the day KB found it. OMIT if unknown — never guess a date
 ---
 The note, in KB's words. Markdown. Empty is allowed (the row just has no note).
 ```
 
 Rendering: dated entries newest-first, then an "undated" group (by title)
-for ones shelved before he kept dates — those move up once he backdates
+for ones found before he kept dates — those move up once he backdates
 them from Slack/email. Kind filter only offers kinds that occur. Notes are
 always visible, never behind a tap. Deliberately NOT in RSS (link notes
 would spam subscribers). The intro is `content/shelf.md`.

@@ -288,7 +288,7 @@ for (const t of traces) {
   }));
 }
 
-/* ---------- shelf: links out, dated the day they were shelved ---------- */
+/* ---------- shelf: links out, dated the day KB found them ---------- */
 
 const SHELF_KINDS = ["tweet", "article", "talk", "book"]; // display order; validated by check.sh
 const shelfRow = (d) => `<li data-kind="${d.kind}">
@@ -301,7 +301,7 @@ const shelfRow = (d) => `<li data-kind="${d.kind}">
 </li>`;
 const shelfList = (docs) => `<ol class="rows">\n${docs.map(shelfRow).join("\n")}\n</ol>`;
 const shelfDated = shelf.filter((d) => d.date);       // already newest-first
-const shelfUndated = shelf.filter((d) => !d.date)     // shelved before dates were kept: by title
+const shelfUndated = shelf.filter((d) => !d.date)     // found before dates were kept: by title
   .sort((a, b) => a.title.localeCompare(b.title));
 const shelfKinds = SHELF_KINDS.filter((k) => shelf.some((d) => d.kind === k));
 out("shelf/index.html", page({
