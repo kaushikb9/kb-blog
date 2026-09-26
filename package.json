@@ -8,6 +8,7 @@
     "dev": "node dev.js",
     "test": "./check.sh",
     "skin": "node tools/skin.js",
+    "portraits": "node tools/portraits.js",
     "deploy": "./check.sh && npx wrangler pages deploy dist --project-name kb-blog --branch main"
   },
   "keywords": [],

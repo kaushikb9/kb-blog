@@ -57,6 +57,14 @@ for (const skin of lib.skinsOnDisk()) {
       for (const t of SHARED_TOKENS) assert.ok(css.includes(`${t}:`), `skins/${skin}/assets/style.css never sets ${t} — dev.js's editor and shared snippets rely on it`);
     });
 
+    test("every portrait slot it declares was copied in (npm run portraits)", () => {
+      const sj = JSON.parse(fs.readFileSync(path.join(ROOT, "skins", skin, "skin.json"), "utf8"));
+      for (const [slot, id] of Object.entries(sj.portraits || {})) {
+        assert.ok(id, `skins/${skin}/skin.json: slot "${slot}" names no portrait — pick a ~/Code/me item id`);
+        assert.ok(fs.existsSync(path.join(ROOT, "skins", skin, "assets", "portraits", `${slot}.jpg`)), `skins/${skin}: portraits/${slot}.jpg missing — run npm run portraits`);
+      }
+    });
+
     test("stylesheet hash matches the file", () => {
       const src = d.read("/index.html");
       const m = src.match(/href="(\/style\.css)\?v=([0-9a-f]+)"/);
@@ -146,15 +154,17 @@ describe("preview: every other skin at /skins/<name>/, dev only", () => {
   let d;
   before(() => { d = lib.build(["--preview"], lib.tmpOut("preview")); });
 
-  test("each non-live skin is previewed under its prefix", () => {
-    const live = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8")).live;
-    for (const s of lib.skinsOnDisk().filter((s) => s !== live)) {
+  test("each skin that is neither live nor archived is previewed under its prefix", () => {
+    const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, "site.json"), "utf8"));
+    const worn = new Set((cfg.history || []).map((x) => x.skin));
+    for (const s of lib.skinsOnDisk().filter((s) => s !== cfg.live)) {
       assert.ok(d.exists.has(`/skins/${s}/index.html`), `--preview did not render ${s}`);
-      assert.ok(d.read(`/skins/${s}/index.html`).includes(`data-frame="preview"`), `/skins/${s}/ has no preview banner`);
+      const kind = worn.has(s) ? "archive" : "preview"; // a skin that has been live keeps its archive banner
+      assert.ok(d.read(`/skins/${s}/index.html`).includes(`data-frame="${kind}"`), `/skins/${s}/ has no ${kind} banner`);
     }
   });
 
-  test("previews stay out of the sitemap", () => {
-    assert.ok(!d.read("/sitemap.xml").includes("/skins/"), "sitemap lists preview pages");
+  test("no page under /skins/<name>/ is in the sitemap (the /skins/ index itself may be)", () => {
+    assert.ok(!/\/skins\/[a-z0-9-]+\//.test(d.read("/sitemap.xml")), "sitemap lists a preview or archived page");
   });
 });

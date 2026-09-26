@@ -1,4 +1,17 @@
 {
   "title": "Outie",
-  "description": "The person first: a cobalt hero with the sunburst portrait by day, moonlit navy by night. Bricolage Grotesque headings, Literata for reading."
+  "description": "The person first: a cobalt hero by day, moonlit navy by night, the portrait swapping with the theme. Bricolage Grotesque headings, Literata for reading.",
+  "portraits": {
+    "day": "canon/sunset-slice-of-life",
+    "night": "canon/sunset-slice-of-life",
+    "avatar": {
+      "id": "keepers/terrace-light",
+      "crop": [
+        0.51,
+        0.36,
+        0.56
+      ],
+      "px": 240
+    }
+  }
 }

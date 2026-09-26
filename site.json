@@ -1,6 +1,14 @@
 {
-  "live": "paper",
+  "live": "outie",
   "history": [
-    { "skin": "paper", "from": "2026-07-25" }
+    {
+      "skin": "paper",
+      "from": "2026-07-25",
+      "to": "2026-09-26"
+    },
+    {
+      "skin": "outie",
+      "from": "2026-09-26"
+    }
   ]
 }

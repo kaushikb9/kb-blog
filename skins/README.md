@@ -15,7 +15,7 @@ skins/<name>/
   templates.js            the 17 functions below
   assets/style.css        must set the six shared tokens (see "Rules")
   assets/fonts/*.woff2    self-hosted, never a CDN
-  assets/portraits/*.jpg  web-sized copies (tools/portrait.sh), originals stay in ~/Code/me
+  assets/portraits/<slot>.jpg  the skin's chosen portraits, copied in by npm run portraits
 ```
 
 ## Commands
@@ -24,7 +24,7 @@ skins/<name>/
 npm run dev               # every skin, one pill to flip the page you're on between them
 npm run skin -- outie     # put outie on: closes paper's stint today, archives it at /skins/paper/
 ./check.sh                # builds every skin as if live + the archive and preview frames
-tools/portrait.sh ~/Code/me/<file>.png <skin> <name>   # add a portrait to a skin
+npm run portraits         # copy each skin's chosen portraits in from ~/Code/me (-- --suggest: what me would change)
 ```
 
 The live skin renders at `/`. Every skin that has been live renders again,
@@ -91,7 +91,25 @@ whole page.
 - `ctx.h`: `esc`, `fmtDate`, `slugify`. Escape every data-derived string.
 - `ctx.frame`: `null` when live, else `{kind: "archive"|"preview", from, to}`. Render a banner with `data-frame="<kind>"`.
 - `ctx.history`: `[{skin, title, from, to, live, href}]`, for `/skins/` and a "past skins" footer link
-- `ctx.skin`: `{name, title, description}`
+- `ctx.skin`: `{name, title, description, portraits}`
+
+## Portraits
+
+**The blog decides which portrait each skin wears; `~/Code/me` only supplies
+them.** A skin names its choice per slot in `skin.json`:
+`"portraits": {"day": "canon/sunset-slice-of-life", "avatar": "keepers/ride"}`
+(ids from `~/Code/me/me.json` → `portraits.items`). `npm run portraits`
+copies each original in, web-sized, as `assets/portraits/<slot>.jpg`, and
+those copies are what ship. `me` changing, renaming or dropping a portrait
+never changes the site until someone here edits `skin.json` and pulls again.
+
+- **Never edit `~/Code/me` from this repo** (KB, 2026-09-26). It is read-only
+  here. It runs its own experiments and may suggest: its `me.json` "roles"
+  are suggestions, and `npm run portraits -- --suggest` lists where one
+  differs from what a skin wears. Taking a suggestion means editing
+  `skin.json` here.
+- Never drop a file into `portraits/` by hand. `./check.sh` fails if a
+  declared slot was never pulled.
 
 ## Rules (tested in tests/skins.test.js)
 

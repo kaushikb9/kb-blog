@@ -111,7 +111,7 @@ function home(ctx) {
     title: site.config.title,
     body: `
 <section class="hero">
-  <img src="${ctx.asset("portraits/terrace.jpg")}" alt="Kaushik on the terrace in a royal-blue shirt and scarf">
+  <img src="${ctx.asset("portraits/matchday.jpg")}" alt="Kaushik on the terrace in a royal-blue shirt and scarf">
   <div class="who">
     <h1>Kaushik Bhat</h1>
     <div class="notes">

@@ -9,8 +9,9 @@ same Cloudflare account as antifeed.
 **The site is skinned (since 2026-09-26).** Its look is a swappable skin over a
 fixed core, changed every 6 to 12 months; past skins stay up at
 `/skins/<name>/`. Read **`skins/README.md`** before touching any HTML or CSS.
-It holds the contract every skin meets. Live skin: `paper`. Built and ready:
-`outie` (C, the person first), `manga` (C3, comic panels; posts are episodes),
+It holds the contract every skin meets. Live skin: `outie` (C, the person
+first; KB's pick 2026-09-26, wearing the sunset slice-of-life portrait in both themes). Built and
+ready: `paper` (the original, archived at `/skins/paper/` once Outie ships), `manga` (C3, comic panels; posts are episodes),
 `matchday` (C4, football programme; shirt number = publish order). `../brain/design-system/INVARIANTS.md` still binds every skin's
 product and interaction rules. The Paper skin uses the shared tokens; other
 skins keep the six token names but choose their own values.
@@ -86,15 +87,21 @@ into HTML and CSS. The split was proven by porting the existing design into
   `assets/style.css` + `fonts/` + `portraits/`. Contract in `skins/README.md`.
 - `site.json`: the live skin and the history of every skin worn, with dates.
   `/skins/` (the list of skins) is emitted once there is a past skin.
-- `tools/skin.js` (`npm run skin -- <name>`), `tools/portrait.sh` (a
-  headshot from ~/Code/me into a skin, web-sized; macOS sips), `tools/deck.js`
+- `tools/skin.js` (`npm run skin -- <name>`), `tools/portraits.js`
+  (`npm run portraits`: copies each skin's chosen portraits in from `~/Code/me`,
+  web-sized with macOS sips. The choice lives in the skin's `skin.json`, and
+  `-- --suggest` lists what `me` would change), `tools/deck.js`
   (a talk deck → its scrubbed, embeddable copy; see "Talks").
 - `dev.js`: LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654 builds with `--preview --out .dev` (its own
   dir, never `dist/`): ✎ edit button on
   content pages (in any skin), a skin pill bottom-left that opens the same
   page in each skin, and a watch-rebuild on `content/` and `skins/`.
-- `assets/`: shared icons + manifest only (the CSS belongs to each skin).
+- `assets/`: shared icons + manifest + `deck-viewer.js` (the CSS belongs to each skin).
+  The icon is "kb" in Bricolage Grotesque 800, white on cobalt (2026-09-26), made by
+  `python3 tools/favicon.py` from outlines in `tools/favicon-glyphs.json` (extracted once with
+  fontTools; regenerating needs only sips). A favicon can't load web fonts, hence outlines. Tabs get
+  the biggest letters; the maskable icon keeps them inside Android's safe circle.
   `static/`: robots.txt, llms.txt, `_redirects`, us-trip-gems (passthrough).
 - `migrate.js` — the one-time Hugo importer; historical reference only.
 
@@ -210,6 +217,14 @@ slides carry the talk, so there are no long write-ups.
   auto), applied pre-paint in <head>.
 
 ## Learned the hard way (skins)
+
+- **Blog rules live in this repo; `~/Code/me` is read-only here** (KB,
+  2026-09-26). An agent here re-pointed `me.json` roles and edited
+  `me/AGENTS.md` to change the site's portrait. Both were reverted: "me can
+  have suggestions for us but you don't go and change that yourselves."
+  The blog pins its own portraits in `skin.json`; `me`'s roles are shown
+  by `npm run portraits -- --suggest` and never adopted automatically.
+  The same goes for any other repo this one reads from.
 
 - **Prove a split with a byte-identical build.** Snapshot `dist/`, refactor,
   `diff -r`. Only then change anything visible. The skins split landed that

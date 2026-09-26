@@ -85,8 +85,14 @@ function frameBanner(ctx) {
 }
 
 // light and dark portraits; CSS shows the one that matches the theme
-const portrait = (ctx, cls, alt, lazy = "") => `<img class="${cls} p-light" src="${ctx.asset("portraits/sunburst.jpg")}" alt="${alt}"${lazy}>
-    <img class="${cls} p-dark" src="${ctx.asset("portraits/moonlit.jpg")}" alt="${alt}" loading="lazy">`;
+// roles day / night / avatar come from ~/Code/me (npm run portraits); day and night share one composition
+// one image when day and night are the same portrait (no theme swap, no second download)
+const portrait = (ctx, cls, alt, lazy = "") => {
+  const P = ctx.skin.portraits || {};
+  if (P.day && P.day === P.night) return `<img class="${cls}" src="${ctx.asset("portraits/day.jpg")}" alt="${alt}"${lazy}>`;
+  return `<img class="${cls} p-light" src="${ctx.asset("portraits/day.jpg")}" alt="${alt}"${lazy}>
+    <img class="${cls} p-dark" src="${ctx.asset("portraits/night.jpg")}" alt="${alt}" loading="lazy">`;
+};
 
 const byYear = (docs) => {
   const y = {};
@@ -151,7 +157,7 @@ function post(ctx, p) {
     <div class="kickers">${first ? `<span class="k1">${h.esc(first)}</span>` : ""}<span class="k2">${p.minutes} min</span></div>
     <h1>${h.esc(p.title)}</h1>
     ${p.description ? `<p class="dek">${h.esc(p.description)}</p>` : ""}
-    <div class="byline">${portrait(ctx, "", "", ` loading="lazy"`)}<span>Kaushik Bhat · ${h.fmtDate(p.date)}</span></div>
+    <div class="byline"><img src="${ctx.asset("portraits/avatar.jpg")}" alt="" loading="lazy"><span>Kaushik Bhat · ${h.fmtDate(p.date)}</span></div>
   </header>
   <div class="prose">
 ${p.html}

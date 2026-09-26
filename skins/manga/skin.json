@@ -1,4 +1,7 @@
 {
   "title": "Manga",
-  "description": "The site as a comic page: ink-bordered panels, a halftone hero, a speech-bubble bio, posts as numbered episodes. Dela Gothic One and Archivo."
+  "description": "The site as a comic page: ink-bordered panels, a halftone hero, a speech-bubble bio, posts as numbered episodes. Dela Gothic One and Archivo.",
+  "portraits": {
+    "manga": "canon/teal-apricot-manga"
+  }
 }

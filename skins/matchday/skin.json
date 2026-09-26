@@ -1,4 +1,7 @@
 {
   "title": "Matchday",
-  "description": "The site as a football programme: a royal masthead band, condensed caps, a team sheet where shirt number is publish order and minutes are reading time. Floodlit by night."
+  "description": "The site as a football programme: a royal masthead band, condensed caps, a team sheet where shirt number is publish order and minutes are reading time. Floodlit by night.",
+  "portraits": {
+    "matchday": "keepers/terrace-light"
+  }
 }
