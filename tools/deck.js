@@ -12,7 +12,7 @@
 //   5. adds the embed shim: inside the talk page's viewer the deck hides its own
 //      controls, fills the frame, reports every slide change to the parent
 //      ({deck:{n,total,title}}) and obeys {deckGo:n}. Opened on its own it is unchanged.
-// The source deck stays where it is (~/Code/me/talks/…); only the scrubbed copy
+// The source deck stays where it is (iCloud Drive "On the Stage/", which me.json names as icloud:…); only the scrubbed copy
 // enters this repo. check.sh re-checks the copy: no notes, no private names.
 const fs = require("fs");
 

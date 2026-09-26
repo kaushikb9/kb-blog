@@ -160,8 +160,8 @@ slides carry the talk, so there are no long write-ups.
   speaker notes, drops named slides (`--drop 2,3`), removes extra matches
   (`--cut <regex>`), renumbers, and adds the embed shim that talks to the
   viewer. It refuses when the deck's shape surprises it. Sources stay in
-  `~/Code/me/talks/`. The ai-os command, for the record:
-  `node tools/deck.js "<me>/talks/My Creations/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div>…'`
+  iCloud Drive `On the Stage/` (me.json names them as `icloud:` paths). The ai-os command, for the record:
+  `node tools/deck.js "$HOME/Library/Mobile Documents/com~apple~CloudDocs/On the Stage/My Creations/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div>…'`
   (2–4 were internal chat screenshots, 17 and the "50+" were dashboard-only figures).
 - **Talks are the exception to "never name the employer"** (KB, 2026-09-26):
   what was said on stage is already public, so the logo and product names
