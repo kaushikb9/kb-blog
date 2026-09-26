@@ -36,7 +36,7 @@ function layout(ctx, { head, body, progress, url }) {
 <head>
 ${head}
 <meta name="theme-color" content="#fbf7ec" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0e1a2b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b0b0c" media="(prefers-color-scheme: dark)">
 <link rel="preload" href="${ctx.asset("fonts/bricolage-grotesque.woff2")}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${ctx.css}">
 ${PREPAINT}

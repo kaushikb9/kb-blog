@@ -1,11 +1,14 @@
 /* Outie — the person first. Cobalt and sun by day (the palette came from the
-   round-1 sunburst portrait), moonlit navy by night; the portrait itself is
-   the me repo's day/night pair and swaps with the theme. Bricolage Grotesque for everything you operate and
-   every heading; Literata for the writing itself (the one serif surface).
+   round-1 sunburst portrait). Black by night with no blue left (KB, 2026-09-26:
+   the navy night was "just blue everywhere"): a charcoal hero, and links and
+   highlights in moon yellow. The portraits are this skin's choice (skin.json).
+   Bricolage Grotesque for everything you operate and every heading; Literata
+   for the writing itself (the one serif surface).
 
    The six shared tokens keep their names (--bg --card --ink --muted --line
    --gold[-soft]) so dev.js's edit page and any shared snippet still work.
-   --gold is this skin's ACTION colour (links, active states): cobalt, not gold.
+   --gold is this skin's ACTION colour (links, active states): cobalt by day,
+   moon yellow by night.
    Two skin-only hues, each with fixed jobs:
      --block  the portrait's ground: home hero and post header, nothing else
      --sun    highlight: the Now pill, the Latest tag, pull quotes, the
@@ -39,22 +42,22 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e1a2b;  --card: #152238;  --ink: #f1ead8;  --muted: #95a0b5;  --line: #243552;
-    --gold: #a9bcff;  --gold-soft: #1b2a47;
-    --block: #172c50;  --on-block: #f1ead8;  --on-block-soft: #c9cfdc;
-    --sun: #f3dc8a;  --sun-ink: #0e1a2b;  --dot: #f3dc8a;
-    --band: #09121f;  --on-band: #95a0b5;
+    --bg: #0b0b0c;  --card: #161618;  --ink: #f1ead8;  --muted: #a39f96;  --line: #29292c;
+    --gold: #f3dc8a;  --gold-soft: #2a2516;
+    --block: #19191b;  --on-block: #f1ead8;  --on-block-soft: #bdb8ae;
+    --sun: #f3dc8a;  --sun-ink: #0b0b0c;  --dot: #f3dc8a;
+    --band: #000000;  --on-band: #a39f96;
     color-scheme: dark;
   }
   :root:not([data-theme="light"]) .p-light { display: none; }
   :root:not([data-theme="light"]) .p-dark { display: block; }
 }
 :root[data-theme="dark"] {
-  --bg: #0e1a2b;  --card: #152238;  --ink: #f1ead8;  --muted: #95a0b5;  --line: #243552;
-  --gold: #a9bcff;  --gold-soft: #1b2a47;
-  --block: #172c50;  --on-block: #f1ead8;  --on-block-soft: #c9cfdc;
-  --sun: #f3dc8a;  --sun-ink: #0e1a2b;  --dot: #f3dc8a;
-  --band: #09121f;  --on-band: #95a0b5;
+  --bg: #0b0b0c;  --card: #161618;  --ink: #f1ead8;  --muted: #a39f96;  --line: #29292c;
+  --gold: #f3dc8a;  --gold-soft: #2a2516;
+  --block: #19191b;  --on-block: #f1ead8;  --on-block-soft: #bdb8ae;
+  --sun: #f3dc8a;  --sun-ink: #0b0b0c;  --dot: #f3dc8a;
+  --band: #000000;  --on-band: #a39f96;
   color-scheme: dark;
 }
 .p-dark { display: none; }
