@@ -55,9 +55,16 @@ function routes(site, tags) {
   return r;
 }
 
+// Icons are content-hashed like the stylesheet: browsers keep favicons in their own
+// cache keyed by URL, so a new icon at an old URL is never seen (2026-09-26).
+const iconV = (ROOT, f) => {
+  const p = path.join(ROOT, "assets", f);
+  return fs.existsSync(p) ? `${f}?v=${crypto.createHash("md5").update(fs.readFileSync(p)).digest("hex").slice(0, 8)}` : f;
+};
+
 // The <head> lines every page carries whatever the skin. Canonical always points
 // at the live URL, so an archived copy never competes with the real page.
-function head(site, pg, url, archived) {
+function head(ROOT, site, pg, url, archived) {
   const S = site.config;
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,9 +78,9 @@ function head(site, pg, url, archived) {
 <link rel="canonical" href="${S.base}${url}">
 <link rel="alternate" type="application/rss+xml" title="${h.esc(S.title)}" href="/index.xml">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="icon" href="/icon.svg" type="image/svg+xml">
-<link rel="icon" href="/favicon.ico" sizes="32x32">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">${archived ? `
+<link rel="icon" href="/${iconV(ROOT, "icon.svg")}" type="image/svg+xml">
+<link rel="icon" href="/${iconV(ROOT, "favicon.ico")}" sizes="32x32">
+<link rel="apple-touch-icon" href="/${iconV(ROOT, "apple-touch-icon.png")}">${archived ? `
 <meta name="robots" content="noindex">` : ""}`;
 }
 
@@ -111,7 +118,7 @@ function renderSkin({ ROOT, site, tags, skin, prefix, frame, history, out }) {
   for (const r of pages) {
     if (prefix && r.tpl === "skins") continue; // one skins index, on the live site
     const pg = skin.templates[r.tpl](ctx, r.arg);
-    const html = skin.templates.layout(ctx, { ...pg, url: r.url, head: head(site, pg, r.url, !!frame) });
+    const html = skin.templates.layout(ctx, { ...pg, url: r.url, head: head(ROOT, site, pg, r.url, !!frame) });
     write(r.file, html);
   }
   // page-bundle images sit beside their page, so every copy of the page gets them

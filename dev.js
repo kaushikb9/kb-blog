@@ -17,7 +17,7 @@ const PORT = 8654;
 const MIME = {
   ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript",
   ".svg": "image/svg+xml", ".png": "image/png", ".jpeg": "image/jpeg", ".jpg": "image/jpeg",
-  ".xml": "application/xml", ".txt": "text/plain; charset=utf-8", ".webp": "image/webp",
+  ".xml": "application/xml", ".ico": "image/x-icon", ".webmanifest": "application/manifest+json", ".woff2": "font/woff2", ".txt": "text/plain; charset=utf-8", ".webp": "image/webp",
 };
 
 const sources = () => JSON.parse(fs.readFileSync(path.join(ROOT, ".sources.json"), "utf8"));
@@ -112,6 +112,7 @@ http.createServer((req, res) => {
   if (!fs.existsSync(file)) { file = path.join(DIST, "404.html"); res.statusCode = 404; }
   const ext = path.extname(file);
   res.setHeader("content-type", MIME[ext] || "application/octet-stream");
+  res.setHeader("cache-control", "no-store"); // a preview must never show a stale page or favicon
   let data = fs.readFileSync(file);
   // only pages a skin drew get the pill; a vendored talk deck (no style.css) is content
   if (ext === ".html" && data.includes("style.css")) data = data.toString().replace("</body>", skinPill(u.pathname) + "\n</body>");
