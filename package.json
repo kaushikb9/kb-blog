@@ -7,6 +7,7 @@
     "build": "node build.js",
     "dev": "node dev.js",
     "test": "./check.sh",
+    "skin": "node tools/skin.js",
     "deploy": "./check.sh && npx wrangler pages deploy dist --project-name kb-blog --branch main"
   },
   "keywords": [],

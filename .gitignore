@@ -1,4 +1,5 @@
 node_modules/
 dist/
+.dev/
 .sources.json
 .DS_Store

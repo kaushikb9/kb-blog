@@ -1,15 +1,16 @@
 # kb-blog
 
-kaushik.sh (formerly kaushikbhat.com) rebuilt hand-rolled — no framework, no Hugo. Sibling design
-language to antifeed (warm paper / ink / gold).
+kaushik.sh (formerly kaushikbhat.com) rebuilt hand-rolled — no framework, no Hugo. Its look is a
+swappable skin; the Paper skin is a sibling of antifeed (warm paper / ink / gold).
 
 - `content/` — markdown with YAML frontmatter (migrated from kb-hugo,
   frontmatter normalized, one tweet shortcode replaced with a blockquote)
-- `build.js` — the entire "static site generator" (~250 lines):
-  markdown → HTML, home + archives + traces (kind filter) + shelf (links
-  out, dated notes) + tags + about/ideas + hikes, RSS with GUIDs identical
-  to the Hugo feed, sitemap, 404
-- `assets/` — one CSS file, icons
+- `build.js` + `core/` — the entire "static site generator": markdown →
+  one data object → HTML, RSS with GUIDs identical to the Hugo feed, sitemap
+- `skins/` — the look, swappable every 6–12 months (`paper` live; `outie`,
+  `manga`, `matchday` ready). Past skins stay up at `/skins/<name>/`. See `skins/README.md`.
+- `site.json` — which skin is live, and every skin worn so far
+- `assets/` — shared icons and manifest
 - `static/` — robots.txt, llms.txt, us-trip-gems (passthrough)
 - `migrate.js` — one-time importer from ../kb-hugo (kept for reference)
 
@@ -18,6 +19,7 @@ node dev.js      # preview at localhost:8654 with in-browser editing:
                  #   ✎ edit button on every content page → markdown textarea
                  #   → Save & rebuild. Direct file edits auto-rebuild too.
 node build.js    # plain one-shot build → dist/
+npm run skin -- outie   # swap the live skin
 ```
 
 Everything readable is markdown in `content/` — posts, traces, shelf

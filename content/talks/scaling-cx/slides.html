@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Evolution — 5 Phases, 1 Destination</title>
+<!-- made by tools/deck.js from a PDF: pages 3, 4, 5, 6 of 7 -->
+<style>
+html,body{height:100%;margin:0;background:#111}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.slide{display:none;margin:0;width:100%;height:100%;align-items:center;justify-content:center}
+.slide.on{display:flex}
+.slide img{max-width:100%;max-height:100%;display:block}
+.slide h2{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.nav{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;font:14px system-ui,sans-serif;color:#ddd;background:rgba(0,0,0,.55);padding:6px 10px;border-radius:99px}
+.nav button{background:none;border:1px solid #666;color:#ddd;width:30px;height:30px;border-radius:50%;cursor:pointer}
+/* embedded in a talk page: the viewer's bar replaces ours */
+html.embed .nav{display:none}
+html.embed body{background:transparent}
+</style>
+</head>
+<body>
+<div id="stage">
+<section class="slide on" id="s1" data-n="01"><h2>The Evolution — 5 Phases, 1 Destination</h2><img src="slide-01.jpg" alt="Slide 1: The Evolution — 5 Phases, 1 Destination"></section>
+<section class="slide" id="s2" data-n="02"><h2>Skills Architecture — How It Works</h2><img src="slide-02.jpg" alt="Slide 2: Skills Architecture — How It Works" loading="lazy"></section>
+<section class="slide" id="s3" data-n="03"><h2>Horizontal vs Vertical Skills</h2><img src="slide-03.jpg" alt="Slide 3: Horizontal vs Vertical Skills" loading="lazy"></section>
+<section class="slide" id="s4" data-n="04"><h2>The Replicable Playbook</h2><img src="slide-04.jpg" alt="Slide 4: The Replicable Playbook" loading="lazy"></section>
+</div>
+<div class="nav"><button type="button" data-d="-1" aria-label="Previous slide">‹</button><span id="pn">1 / 4</span><button type="button" data-d="1" aria-label="Next slide">›</button></div>
+<script>
+(function(){
+  const EMB=window.self!==window.top;if(EMB)document.documentElement.classList.add('embed');
+  const slides=[...document.querySelectorAll('.slide')];
+  let i=Math.max(0,Math.min(slides.length-1,(parseInt(location.hash.slice(1),10)||1)-1));
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('on',k===i));
+    document.getElementById('pn').textContent=(i+1)+' / '+slides.length;
+    if(!EMB){try{history.replaceState(null,'','#'+(i+1));}catch(e){}}
+    if(EMB){try{parent.postMessage({deck:{n:i+1,total:slides.length,title:slides[i].querySelector('h2').textContent}},location.origin);}catch(e){}}
+  }
+  document.querySelector('.nav').addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(i+ +b.dataset.d);});
+  window.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' ','PageDown'].includes(e.key)){e.preventDefault();go(i+1);}else if(['ArrowLeft','ArrowUp','PageUp'].includes(e.key)){e.preventDefault();go(i-1);}else if(e.key==='Home')go(0);else if(e.key==='End')go(slides.length-1);});
+  let tx=null;
+  addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+  addEventListener('touchend',e=>{if(tx==null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)go(i+(d<0?1:-1));tx=null;});
+  window.addEventListener('message',e=>{if(e.origin===location.origin&&e.data&&typeof e.data.deckGo==='number')go(e.data.deckGo-1);});
+  go(i);
+})();
+</script>
+</body>
+</html>

@@ -26,6 +26,4 @@ apps:
     line: Hand-rolled, no framework. One build script agents can edit.
     repo: https://github.com/kaushikb9/kb-blog
     image: kb-blog.png
-# Talk rows: title, where, url, label (slides | video), image. Section renders only when non-empty.
-talks: []
 ---
