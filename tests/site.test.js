@@ -190,13 +190,19 @@ test("every vendored deck is the scrubbed copy: no speaker notes, no private nam
   const denyFile = path.join(require("os").homedir(), ".config", "kb", "private-names.txt");
   const deny = fs.existsSync(denyFile)
     ? fs.readFileSync(denyFile, "utf8").split("\n").map((x) => x.trim()).filter((x) => x && !x.startsWith("#")) : [];
+  // An empty list passes without checking anything, which is worse than no check.
+  assert.ok(deny.length, `${denyFile} is missing or empty: the private-name check would check nothing`);
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   for (const t of lib.talksOnDisk(true)) {
     for (const f of fs.readdirSync(t.dir).filter((f) => f.endsWith(".html"))) {
       const src = fs.readFileSync(path.join(t.dir, f), "utf8");
       assert.ok(!/<aside class="notes"/.test(src), `content/talks/${t.slug}/${f} still has speaker notes — run it through tools/deck.js`);
       assert.ok(src.includes("html.embed"), `content/talks/${t.slug}/${f} has no embed shim — run it through tools/deck.js`);
+      // Whole words, and never inside an embedded image: a deck's base64 is
+      // random letters, so a substring match found "names" in pictures (2026-09-27).
+      const text = src.replace(/data:[^;,"'\s)]+;base64,[A-Za-z0-9+/=]+/g, "").toLowerCase();
       for (const n of deny)
-        assert.ok(!src.toLowerCase().includes(n.toLowerCase()), `content/talks/${t.slug}/${f} contains a name from ~/.config/kb/private-names.txt`);
+        assert.ok(!new RegExp(`(^|[^a-z])${esc(n.toLowerCase())}([^a-z]|$)`).test(text), `content/talks/${t.slug}/${f} contains "${n}" from ~/.config/kb/private-names.txt`);
     }
   }
 });
