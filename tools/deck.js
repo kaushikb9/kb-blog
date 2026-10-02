@@ -4,6 +4,7 @@
 //   node tools/deck.js <source.html> content/talks/<slug>/slides.html [--drop 2,3,4] [--cut <regex>]…
 //       [--swap "<regex>=><text>"]… [--blur-image "<n>:<x0>,<y0>,<x1>,<y1>"]…
 //   node tools/deck.js <source.pdf> … --pages 1,3 [--titles "A|B"] [--blur <regex>]… [--swap "<regex>=><text>@<font.ttf>"]…
+//       [--cut-band "<n>:<y0>,<y1>"]…
 // Every edit refuses when it matches nothing. The redaction recipes in use are in CLAUDE.md (Talks).
 //
 // What it does, in order, and it refuses (exit 1) if any step finds nothing to do
@@ -26,6 +27,7 @@ const drop = new Set();
 const cuts = [];
 const blurs = []; // PDF only: words to blur on the rendered pages (KB, 2026-10-03: product names)
 const swaps = []; // both: replace matching text; on a PDF page image the line is repainted in the given font
+const bands = []; // PDF only: remove a horizontal band from a page (KB, 2026-10-03: drop a line, trim a box)
 const blurImages = []; // HTML only: blur a box on a slide's embedded screenshot (KB, 2026-10-03: a colleague's handle)
 for (let i = 0; i < rest.length; i++) {
   if (rest[i] === "--drop") rest[++i].split(",").forEach((n) => drop.add(+n));
@@ -35,6 +37,10 @@ for (let i = 0; i < rest.length; i++) {
     const [pat, rhs] = rest[++i].split("=>"); const [to, font] = (rhs ?? "").split("@");
     if (!pat || to === undefined) die(`--swap needs "<regex>=><text>", got ${rest[i]}`);
     swaps.push({ re: new RegExp(pat, "g"), to, font: font || null });
+  } else if (rest[i] === "--cut-band") { // PDF: "<slide as published>:<y0>,<y1>" fractions of the height; the band goes, what's below moves up
+    const [n, box] = rest[++i].split(":"); const [y0, y1] = box.split(",").map(Number);
+    if (!(y0 >= 0 && y1 > y0 && y1 <= 1)) die(`--cut-band ${rest[i]}: needs 0 <= y0 < y1 <= 1`);
+    bands.push({ n: +n, y0, y1 });
   } else if (rest[i] === "--blur-image") { // HTML: "<slide as published>:<x0>,<y0>,<x1>,<y1>" as fractions of the slide's first image
     const [n, box] = rest[++i].split(":"); const [x0, y0, x1, y1] = box.split(",").map(Number);
     blurImages.push({ n: +n, rect: { x0, y0, x1, y1 } });
@@ -72,7 +78,8 @@ if (/\.pdf$/i.test(src)) {
     if (!title) die(`page ${p} has no text to title it; pass --titles`);
     return { img: `${name}.jpg`, title, page: p };
   });
-  if (blurs.length || swaps.length) {
+  for (const b of bands) if (!(b.n >= 1 && b.n <= slides.length)) die(`--cut-band ${b.n}: the deck has ${slides.length} slides`);
+  if (blurs.length || swaps.length || bands.length) {
     const hits = blurs.map(() => 0), shits = swaps.map(() => 0), jobs = [];
     for (const s of slides) {
       const xml = execFileSync("pdftotext", ["-bbox-layout", "-f", s.page, "-l", s.page, src, "-"].map(String)).toString();
@@ -103,6 +110,7 @@ if (/\.pdf$/i.test(src)) {
                        text: text.replace(new RegExp(sw.re.source, "g"), sw.to), orig: text, font: sw.font });
         });
       }
+      for (const b of bands) if (b.n === slides.indexOf(s) + 1) rects.push({ band: true, y0: b.y0, y1: b.y1 });
       if (rects.length) jobs.push({ file: path.join(dir, s.img), rects });
       for (const sw of swaps) s.title = s.title.replace(new RegExp(sw.re.source, "g"), sw.to);
       if (rects.length) s.title = blurs.reduce((t, re) => t.replace(new RegExp(re.source, "gi"), "…"), s.title);

@@ -180,14 +180,19 @@ slides carry the talk, so there are no long write-ups.
     scrambled cmap and drops letters. (HTML: `--swap "<regex>=><text>"` is a plain text replace.)
   - `--blur-image "<n>:<x0>,<y0>,<x1>,<y1>"` (HTML): blurs a box, in fractions, on published slide
     n's embedded screenshot.
+  - `--cut-band "<n>:<y0>,<y1>"` (PDF): removes a full-width band (fractions of the height) from
+    published slide n; everything below moves up. It drops a line and trims the boxes around it in
+    one cut, as long as the band holds only that line and plain fill. Take y from
+    `pdftotext -bbox-layout` and look at the result.
   - Names: the support AI is called **Agentic CX** on the site, never its internal name (KB,
     2026-10-03: "remove the word … from everywhere"). Product names are blurred; a colleague's
     GitHub handle is blurred; other teams' agent names are replaced by a generic chip.
 - **The two rebuild commands, exactly** (`I` = "$HOME/Library/Mobile Documents/com~apple~CloudDocs/On the Stage/My Creations", `T` = /System/Library/Fonts/Supplemental):
   - ai-os: `node tools/deck.js "$I/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div><div class="l">agents created across teams</div></div>' --swap '<span class="chip">Blash</span>[\s\S]*?<span class="chip wide">Security Reviewer</span>=><span class="chip wide">+ agents built by other teams</span>' --blur-image '6:0.126,0.050,0.210,0.070'`
     (2–4 were internal chat screenshots, 17 and the "50+" were dashboard-only figures; slide 6 is a real PR, its merger's handle blurred).
-  - scaling-cx: `node tools/deck.js "$I/<the skills-journey PDF, see me.json>" content/talks/scaling-cx/slides.html --pages 1,3,4,5,6 --titles "Agentic CX: The AI Journey|The Evolution — 5 Phases, 1 Destination|Skills Architecture — How It Works|Horizontal vs Vertical Skills|The Replicable Playbook" --blur "Settlements? (On-Hold|Status|Config|Recon)" --blur "Refund Processing" --blur "Payments" --blur "Settlements" --swap "<internal name>: The AI Journey=>Agentic CX: The AI Journey@$T/Trebuchet MS Bold.ttf" --swap "Owned by: <internal name> Platform Team=>Owned by: Agentic CX Platform Team@$T/Trebuchet MS Bold Italic.ttf"`
-    (the internal name is the PDF's own word; it is kept out of this file on purpose. Read it from the PDF's title page.)
+  - scaling-cx: `node tools/deck.js "$I/<the skills-journey PDF, see me.json>" content/talks/scaling-cx/slides.html --pages 1,3,4,5,6 --titles "Agentic CX: The AI Journey|The Evolution — 5 Phases, 1 Destination|Skills Architecture — How It Works|Horizontal vs Vertical Skills|The Replicable Playbook" --blur "Settlements? (On-Hold|Status|Config|Recon)" --blur "Refund Processing" --blur "Payments" --swap "<internal name>: The AI Journey=>Agentic CX: The AI Journey@$T/Trebuchet MS Bold.ttf" --cut-band "4:0.850,0.931" --cut-band "5:0.172,0.230"`
+    (the internal name is the PDF's own word; it is kept out of this file on purpose. Read it from the PDF's title page.
+    The bands: slide 4 loses both "Owned by" lines and its cards end after the last row; slide 5 loses its subtitle and goes straight to the steps.)
 - **Talks, and the About page, are the exceptions to "never name the employer"** (KB, 2026-09-26; About since 2026-10-02, "fix it" when asked whether it should match the talks):
   what was said on stage is already public, so the logo and product names
   stay. Speaker notes, internal screenshots and dashboard-only numbers never
