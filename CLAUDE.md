@@ -172,7 +172,7 @@ slides carry the talk, so there are no long write-ups.
   iCloud Drive `On the Stage/` (me.json names them as `icloud:` paths). The ai-os command, for the record:
   `node tools/deck.js "$HOME/Library/Mobile Documents/com~apple~CloudDocs/On the Stage/My Creations/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div>…'`
   (2–4 were internal chat screenshots, 17 and the "50+" were dashboard-only figures).
-- **Talks are the exception to "never name the employer"** (KB, 2026-09-26):
+- **Talks, and the About page, are the exceptions to "never name the employer"** (KB, 2026-09-26; About since 2026-10-02, "fix it" when asked whether it should match the talks):
   what was said on stage is already public, so the logo and product names
   stay. Speaker notes, internal screenshots and dashboard-only numbers never
   ship; check.sh holds the notes and the private-names list.
