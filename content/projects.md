@@ -22,8 +22,9 @@ apps:
     repo: https://github.com/kaushikb9/margin
   - name: traces
     line: A shared life-log for two, drawn as one road through the years. Private.
-  - name: this site
-    line: Hand-rolled, no framework. One build script agents can edit.
+  - name: skins for this site
+    line: This site changes its look every few months. Each old look stays up, whole, as it was.
+    url: /skins/
     repo: https://github.com/kaushikb9/kb-blog
     image: kb-blog.png
 ---

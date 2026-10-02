@@ -108,7 +108,7 @@ function renderSkin({ ROOT, site, tags, skin, prefix, frame, history, out }) {
     site, h, tags, history,
     skin: { name: skin.name, ...skin.meta },
     frame,                                   // null live; {kind:"archive"|"preview", from, to} otherwise
-    u: (p) => prefix + p,                    // every internal href goes through this
+    u: (p) => (p.startsWith("/skins/") ? p : prefix + p), // every internal href goes through this; /skins/ only exists at the root
     asset: (p) => `${prefix}/${p}`,          // a file from skins/<name>/assets/
     css: `${prefix}/style.css?v=${cssv}`,
   };

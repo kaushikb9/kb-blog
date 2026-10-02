@@ -33,7 +33,6 @@ function layout(ctx, { head, body, progress, url }) {
   const { u } = ctx;
   const nav = [["/", "writing"], ["/talks/", "talks"], ["/projects/", "projects"], ["/shelf/", "shelf"], ["/about/", "about"]]
     .map(([p, label]) => `<a href="${u(p)}"${p === url ? ` aria-current="page"` : ""}>${label}</a>`).join("\n    ");
-  const past = ctx.history.some((x) => !x.live);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -62,7 +61,7 @@ ${body}
   <div class="wrap">
     <a class="wordmark" href="${u("/")}">kaushik<span>.</span>sh</a>
     <nav>
-      <a href="/index.xml">rss</a>${past ? `\n      <a href="/skins/">past skins</a>` : ""}
+      <a href="/index.xml">rss</a>
       <a href="https://github.com/kaushikb9/kb-blog" rel="noopener">source</a>
     </nav>
   </div>
@@ -247,7 +246,8 @@ function projects(ctx) {
   const { site, h, u } = ctx;
   const P = site.projects;
   const tile = (e) => {
-    const ext = (href, text) => `<a href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
+    const ext = (href, text) => href.startsWith("/") ? `<a href="${u(href)}">${h.esc(text)} →</a>`
+      : `<a href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
     const links = [e.url ? ext(e.url, "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
     return `<li><div class="tile">${e.image ? `<img class="shot" src="${u(`/projects/${h.esc(e.image)}`)}" alt="" loading="lazy">` : ""}
     <div class="body"><span class="rt">${h.esc(e.name)}</span>

@@ -8,7 +8,7 @@ same Cloudflare account as antifeed.
 
 **The site is skinned (since 2026-09-26).** Its look is a swappable skin over a
 fixed core, changed every 6 to 12 months; past skins stay up at
-`/skins/<name>/`. Read **`skins/README.md`** before touching any HTML or CSS.
+`/skins/<name>/`, reached from the "skins for this site" tile on `/projects/` (not the footer). Read **`skins/README.md`** before touching any HTML or CSS.
 It holds the contract every skin meets. Live skin: `outie` (C, the person
 first; KB's pick 2026-09-26, wearing the sunset slice-of-life portrait in both themes). Built and
 ready: `paper` (the original, archived at `/skins/paper/` once Outie ships), `manga` (C3, comic panels; posts are episodes),
@@ -177,7 +177,8 @@ slides carry the talk, so there are no long write-ups.
   stay. Speaker notes, internal screenshots and dashboard-only numbers never
   ship; check.sh holds the notes and the private-names list.
 - A published talk needs slides **or** a video (KB, 2026-09-26); without
-  either it stays `draft: true` (the Digital Native panel today). Not in RSS;
+  either it stays `draft: true` (the Digital Native panel was one; KB dropped it 2026-10-03 as not
+  worthwhile). Not in RSS;
   in the sitemap. A video's poster is its public thumbnail, downloaded into the
   bundle (KB approved it for JSFoo), never hot-linked.
 

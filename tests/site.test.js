@@ -132,7 +132,7 @@ test("projects.md: every row has a name and a line; links are https; images exis
     const who = `content/projects.md app "${e.name || "?"}"`;
     assert.ok(e.name, `${who}: no name`);
     assert.ok(e.line, `${who}: no line — say what it is in one sentence`);
-    if (e.url) assert.match(e.url, /^https:\/\//, `${who}: url must be absolute https, got ${e.url}`);
+    if (e.url) assert.match(e.url, /^(https:\/\/|\/)/, `${who}: url must be absolute https or a path on this site, got ${e.url}`);
     if (e.repo) assert.match(e.repo, /^https:\/\/github\.com\//, `${who}: repo must be a github.com URL, got ${e.repo}`);
     if (e.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "projects", e.image)), `${who}: image content/projects/${e.image} does not exist`);
   }

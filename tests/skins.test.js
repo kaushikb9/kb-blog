@@ -145,8 +145,8 @@ describe("archive: a past skin stays up, whole, at /skins/<name>/", () => {
     for (const it of d.items) assert.ok(!it.includes("/skins/"), "feed item points into /skins/");
   });
 
-  test("the live site links to /skins/ once there is a past skin", () => {
-    assert.ok(d.read("/index.html").includes(`href="/skins/"`), "live home has no link to past skins");
+  test("the projects page links to /skins/ (the footer does not, since 2026-10-03)", () => {
+    assert.ok(d.read("/projects/index.html").includes(`href="/skins/"`), "/projects/ has no tile linking /skins/");
   });
 });
 

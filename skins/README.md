@@ -90,7 +90,9 @@ whole page.
 - `ctx.asset(file)`: a file from this skin's `assets/`; `ctx.css`: the hashed stylesheet URL
 - `ctx.h`: `esc`, `fmtDate`, `slugify`. Escape every data-derived string.
 - `ctx.frame`: `null` when live, else `{kind: "archive"|"preview", from, to}`. Render a banner with `data-frame="<kind>"`.
-- `ctx.history`: `[{skin, title, from, to, live, href}]`, for `/skins/` and a "past skins" footer link
+- `ctx.history`: `[{skin, title, from, to, live, href}]`, for the `/skins/` page. No footer links to it
+  (KB, 2026-10-03): the way in is the "skins for this site" tile on `/projects/`. `ctx.u()` never
+  prefixes a `/skins/` path, because those pages only exist at the site root.
 - `ctx.skin`: `{name, title, description, portraits}`
 
 ## Portraits

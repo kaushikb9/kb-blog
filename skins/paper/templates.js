@@ -30,7 +30,7 @@ ${progress ? `<div id="progress"></div>` : ""}${frameBanner(ctx)}
 ${body}
 </main>
 <footer>
-  <p>© kaushik bhat · <a href="/index.xml">rss</a>${ctx.history.some((x) => !x.live) ? ` · <a href="/skins/">past skins</a>` : ""}</p>
+  <p>© kaushik bhat · <a href="/index.xml">rss</a></p>
 </footer>
 <script>
 document.addEventListener("click",(e)=>{
@@ -275,7 +275,8 @@ function projects(ctx) {
   const { site, h, u } = ctx;
   const P = site.projects;
   const tile = (e) => {
-    const ext = (href, text) => `<a class="go" href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
+    const ext = (href, text) => href.startsWith("/") ? `<a class="go" href="${u(href)}">${h.esc(text)} →</a>`
+      : `<a class="go" href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
     const links = [e.url ? ext(e.url, "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
     return `<li><div class="tile">${e.image ? `<img class="shot" src="${u(`/projects/${h.esc(e.image)}`)}" alt="" loading="lazy">` : ""}
     <span class="body"><span class="rt">${h.esc(e.name)}</span>
