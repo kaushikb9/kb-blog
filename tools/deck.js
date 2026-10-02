@@ -2,6 +2,9 @@
 // A self-contained HTML deck → the public copy a talk page embeds.
 //
 //   node tools/deck.js <source.html> content/talks/<slug>/slides.html [--drop 2,3,4] [--cut <regex>]…
+//       [--swap "<regex>=><text>"]… [--blur-image "<n>:<x0>,<y0>,<x1>,<y1>"]…
+//   node tools/deck.js <source.pdf> … --pages 1,3 [--titles "A|B"] [--blur <regex>]… [--swap "<regex>=><text>@<font.ttf>"]…
+// Every edit refuses when it matches nothing. The redaction recipes in use are in CLAUDE.md (Talks).
 //
 // What it does, in order, and it refuses (exit 1) if any step finds nothing to do
 // where it expected something, so a deck with a different shape fails loudly:
@@ -17,16 +20,26 @@
 const fs = require("fs");
 
 const [src, out, ...rest] = process.argv.slice(2);
-if (!src || !out) { console.error("usage: node tools/deck.js <source.html> <out.html> [--drop 2,3] [--cut <regex>]"); process.exit(1); }
+if (!src || !out) { console.error("usage: node tools/deck.js <source.html|pdf> <out.html> [--drop 2,3] [--cut <regex>] [--swap ...] [--blur-image ...] | [--pages ...] [--titles ...] [--blur ...] (see the header)"); process.exit(1); }
+const die = (msg) => { console.error(`deck.js: ${msg}`); process.exit(1); };
 const drop = new Set();
 const cuts = [];
 const blurs = []; // PDF only: words to blur on the rendered pages (KB, 2026-10-03: product names)
+const swaps = []; // both: replace matching text; on a PDF page image the line is repainted in the given font
+const blurImages = []; // HTML only: blur a box on a slide's embedded screenshot (KB, 2026-10-03: a colleague's handle)
 for (let i = 0; i < rest.length; i++) {
   if (rest[i] === "--drop") rest[++i].split(",").forEach((n) => drop.add(+n));
   else if (rest[i] === "--cut") cuts.push(new RegExp(rest[++i], "gs"));
   else if (rest[i] === "--blur") blurs.push(new RegExp(rest[++i], "i"));
+  else if (rest[i] === "--swap") { // "<regex>=><replacement>[@<font file>]"; the font is for PDF page images only
+    const [pat, rhs] = rest[++i].split("=>"); const [to, font] = (rhs ?? "").split("@");
+    if (!pat || to === undefined) die(`--swap needs "<regex>=><text>", got ${rest[i]}`);
+    swaps.push({ re: new RegExp(pat, "g"), to, font: font || null });
+  } else if (rest[i] === "--blur-image") { // HTML: "<slide as published>:<x0>,<y0>,<x1>,<y1>" as fractions of the slide's first image
+    const [n, box] = rest[++i].split(":"); const [x0, y0, x1, y1] = box.split(",").map(Number);
+    blurImages.push({ n: +n, rect: { x0, y0, x1, y1 } });
+  }
 }
-const die = (msg) => { console.error(`deck.js: ${msg}`); process.exit(1); };
 
 // A PDF deck (exported slides, often image-only) → an image deck that speaks the
 // same protocol to the viewer. Only the pages named by --pages are rendered, so a
@@ -59,8 +72,8 @@ if (/\.pdf$/i.test(src)) {
     if (!title) die(`page ${p} has no text to title it; pass --titles`);
     return { img: `${name}.jpg`, title, page: p };
   });
-  if (blurs.length) {
-    const hits = blurs.map(() => 0), jobs = [];
+  if (blurs.length || swaps.length) {
+    const hits = blurs.map(() => 0), shits = swaps.map(() => 0), jobs = [];
     for (const s of slides) {
       const xml = execFileSync("pdftotext", ["-bbox-layout", "-f", s.page, "-l", s.page, src, "-"].map(String)).toString();
       const pw = +xml.match(/<page width="([\d.]+)"/)[1], ph = +xml.match(/<page[^>]* height="([\d.]+)"/)[1];
@@ -79,10 +92,23 @@ if (/\.pdf$/i.test(src)) {
           }
         });
       }
+      for (const line of xml.match(/<line[^>]*>[\s\S]*?<\/line>/g) || []) {
+        const words = [...line.matchAll(/<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)<\/word>/g)];
+        const text = words.map((w) => w[5]).join(" ");
+        swaps.forEach((sw, b) => {
+          if (!new RegExp(sw.re.source).test(text)) return;
+          shits[b]++; // the whole line is repainted, so text after the match never collides with a longer replacement
+          rects.push({ x0: Math.min(...words.map((w) => +w[1])) / pw, y0: Math.min(...words.map((w) => +w[2])) / ph,
+                       x1: Math.max(...words.map((w) => +w[3])) / pw, y1: Math.max(...words.map((w) => +w[4])) / ph,
+                       text: text.replace(new RegExp(sw.re.source, "g"), sw.to), orig: text, font: sw.font });
+        });
+      }
       if (rects.length) jobs.push({ file: path.join(dir, s.img), rects });
+      for (const sw of swaps) s.title = s.title.replace(new RegExp(sw.re.source, "g"), sw.to);
       if (rects.length) s.title = blurs.reduce((t, re) => t.replace(new RegExp(re.source, "gi"), "…"), s.title);
     }
     blurs.forEach((re, b) => { if (!hits[b]) die(`--blur ${re.source}: matched no text on pages ${pages.join(",")}`); });
+    swaps.forEach((sw, b) => { if (!shits[b]) die(`--swap ${sw.re.source}: matched no line on pages ${pages.join(",")}`); });
     const blurScript = path.join(__dirname, "deck-blur.mjs");
     execFileSync("node", [blurScript, JSON.stringify(jobs)], { stdio: "inherit" });
   }
@@ -162,6 +188,12 @@ for (const re of cuts) {
   s = s.replace(re, "");
 }
 
+// 3b. text swaps (the slide stays, its words change)
+for (const sw of swaps) {
+  if (!sw.re.test(s)) die(`--swap ${sw.re.source} matched nothing`);
+  s = s.replace(sw.re, sw.to);
+}
+
 // 4. renumber
 let k = 0;
 s = s.replace(/<section class="(slide[^"]*)" id="s\d+" data-n="\d+">([\s\S]*?)<span class="pn">\d+<\/span>/g, (m, cls, mid) => {
@@ -169,6 +201,20 @@ s = s.replace(/<section class="(slide[^"]*)" id="s\d+" data-n="\d+">([\s\S]*?)<s
   return `<section class="${cls}" id="s${k}" data-n="${n}">${mid}<span class="pn">${n}</span>`;
 });
 if (k !== total - drop.size) die(`renumbered ${k} slides but expected ${total - drop.size}`);
+
+// 4b. blur boxes on embedded screenshots (decoded, blurred by tools/deck-blur.mjs, re-embedded as JPEG)
+for (const bi of blurImages) {
+  const path = require("path"), os = require("os"), { execFileSync } = require("child_process");
+  const sec = s.match(new RegExp(`<section class="slide[^"]*" id="s${bi.n}"[\\s\\S]*?</section>`));
+  if (!sec) die(`--blur-image ${bi.n}: no such slide after drops`);
+  const m = sec[0].match(/src="data:image\/(png|jpeg);base64,([A-Za-z0-9+/=]+)"/);
+  if (!m) die(`--blur-image ${bi.n}: that slide has no embedded png/jpeg`);
+  const tmp = path.join(os.tmpdir(), `deck-blur-${process.pid}-${bi.n}.${m[1] === "png" ? "png" : "jpg"}`);
+  fs.writeFileSync(tmp, Buffer.from(m[2], "base64"));
+  execFileSync("node", [path.join(__dirname, "deck-blur.mjs"), JSON.stringify([{ file: tmp, rects: [bi.rect] }])], { stdio: "inherit" });
+  const jpg = fs.readFileSync(tmp).toString("base64");
+  s = s.replace(sec[0], sec[0].replace(m[0], `src="data:image/jpeg;base64,${jpg}"`));
+}
 
 // 5. embed shim
 const once = (from, to, what) => {
@@ -199,4 +245,4 @@ html.embed body{background:var(--bg)}
 </head>`, "</head>");
 
 fs.writeFileSync(out, s);
-console.log(`deck.js: ${notes} notes stripped, ${drop.size} slides dropped, ${cuts.length} cuts, ${k} slides → ${out} (${Math.round(s.length / 1024)} KB)`);
+console.log(`deck.js: ${notes} notes stripped, ${drop.size} slides dropped, ${cuts.length} cuts, ${swaps.length} swaps, ${blurImages.length} image blurs, ${k} slides → ${out} (${Math.round(s.length / 1024)} KB)`);

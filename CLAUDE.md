@@ -165,17 +165,29 @@ slides carry the talk, so there are no long write-ups.
   with the same viewer protocol, so a PDF's placeholders and unused pages never
   ship. For the record: Harness = Masterclass pages 1,5,6,8,9 (KB's section plus
   the cover); Scaling CX = skills-journey pages 1,3–6 (2 and 7 are `[XX]`
-  placeholders; KB added the title page, 1, on 2026-10-03), with the product names blurred
-  (KB, 2026-10-03): `--titles "Yogi: The AI Journey|The Evolution — 5 Phases, 1 Destination|Skills Architecture — How It Works|Horizontal vs Vertical Skills|The Replicable Playbook" --blur "Settlements? (On-Hold|Status|Config|Recon)" --blur "Refund Processing" --blur "Payments" --blur "Settlements"`.
-  `--blur <regex>` (PDF decks) finds the matching words with `pdftotext -bbox-layout` and blurs
-  just those boxes on the page image, via `tools/deck-blur.mjs` (headless Chromium from the
-  shared `~/Code/node_modules/playwright`). It refuses if a pattern matches nothing. An HTML deck: it strips
+  placeholders; KB added the title page, 1, on 2026-10-03). An HTML deck: it strips
   speaker notes, drops named slides (`--drop 2,3`), removes extra matches
   (`--cut <regex>`), renumbers, and adds the embed shim that talks to the
-  viewer. It refuses when the deck's shape surprises it. Sources stay in
-  iCloud Drive `On the Stage/` (me.json names them as `icloud:` paths). The ai-os command, for the record:
-  `node tools/deck.js "$HOME/Library/Mobile Documents/com~apple~CloudDocs/On the Stage/My Creations/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div>…'`
-  (2–4 were internal chat screenshots, 17 and the "50+" were dashboard-only figures).
+  viewer. It refuses when the deck's shape surprises it, and when any edit below matches nothing.
+  Sources stay in iCloud Drive `On the Stage/` (me.json names them as `icloud:` paths).
+- **Redactions also go through `tools/deck.js`** (KB's sensitive pass, 2026-10-03), so a rebuild
+  keeps them. Image edits run in `tools/deck-blur.mjs` (headless Chromium from the shared
+  `~/Code/node_modules/playwright`: a canvas is the only image editor here without a new dependency).
+  - `--blur <regex>` (PDF): blurs just the matching words, found with `pdftotext -bbox-layout`.
+  - `--swap "<regex>=><text>@<font.ttf>"` (PDF): repaints the whole matching line on the page
+    image in that font, sized so the original line would span the same width, in the background
+    and ink colours sampled from the slide. Use system fonts: Office's bundled Calibri has a
+    scrambled cmap and drops letters. (HTML: `--swap "<regex>=><text>"` is a plain text replace.)
+  - `--blur-image "<n>:<x0>,<y0>,<x1>,<y1>"` (HTML): blurs a box, in fractions, on published slide
+    n's embedded screenshot.
+  - Names: the support AI is called **Agentic CX** on the site, never its internal name (KB,
+    2026-10-03: "remove the word … from everywhere"). Product names are blurred; a colleague's
+    GitHub handle is blurred; other teams' agent names are replaced by a generic chip.
+- **The two rebuild commands, exactly** (`I` = "$HOME/Library/Mobile Documents/com~apple~CloudDocs/On the Stage/My Creations", `T` = /System/Library/Fonts/Supplemental):
+  - ai-os: `node tools/deck.js "$I/slash-deck-magicball-unicorn-summit.html" content/talks/ai-os/slides.html --drop 2,3,4,17 --cut '<div class="num"><div class="v">50\+</div><div class="l">agents created across teams</div></div>' --swap '<span class="chip">Blash</span>[\s\S]*?<span class="chip wide">Security Reviewer</span>=><span class="chip wide">+ agents built by other teams</span>' --blur-image '6:0.126,0.050,0.210,0.070'`
+    (2–4 were internal chat screenshots, 17 and the "50+" were dashboard-only figures; slide 6 is a real PR, its merger's handle blurred).
+  - scaling-cx: `node tools/deck.js "$I/<the skills-journey PDF, see me.json>" content/talks/scaling-cx/slides.html --pages 1,3,4,5,6 --titles "Agentic CX: The AI Journey|The Evolution — 5 Phases, 1 Destination|Skills Architecture — How It Works|Horizontal vs Vertical Skills|The Replicable Playbook" --blur "Settlements? (On-Hold|Status|Config|Recon)" --blur "Refund Processing" --blur "Payments" --blur "Settlements" --swap "<internal name>: The AI Journey=>Agentic CX: The AI Journey@$T/Trebuchet MS Bold.ttf" --swap "Owned by: <internal name> Platform Team=>Owned by: Agentic CX Platform Team@$T/Trebuchet MS Bold Italic.ttf"`
+    (the internal name is the PDF's own word; it is kept out of this file on purpose. Read it from the PDF's title page.)
 - **Talks, and the About page, are the exceptions to "never name the employer"** (KB, 2026-09-26; About since 2026-10-02, "fix it" when asked whether it should match the talks):
   what was said on stage is already public, so the logo and product names
   stay. Speaker notes, internal screenshots and dashboard-only numbers never
