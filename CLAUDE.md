@@ -164,8 +164,8 @@ slides carry the talk, so there are no long write-ups.
   text): it renders only those pages to `slide-NN.jpg` and writes an image deck
   with the same viewer protocol, so a PDF's placeholders and unused pages never
   ship. For the record: Harness = Masterclass pages 1,5,6,8,9 (KB's section plus
-  the cover); Scaling CX = skills-journey pages 3–6 (2 and 7 were `[XX]`
-  placeholders, 1 was the Feb 2026 title). An HTML deck: it strips
+  the cover); Scaling CX = skills-journey pages 1,3–6 (2 and 7 are `[XX]`
+  placeholders; KB added the title page, 1, on 2026-10-03). An HTML deck: it strips
   speaker notes, drops named slides (`--drop 2,3`), removes extra matches
   (`--cut <regex>`), renumbers, and adds the embed shim that talks to the
   viewer. It refuses when the deck's shape surprises it. Sources stay in
