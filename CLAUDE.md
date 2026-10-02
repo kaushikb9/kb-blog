@@ -98,9 +98,10 @@ into HTML and CSS. The split was proven by porting the existing design into
   content pages (in any skin), a skin pill bottom-left that opens the same
   page in each skin, and a watch-rebuild on `content/` and `skins/`.
 - `assets/`: shared icons + manifest + `deck-viewer.js` (the CSS belongs to each skin).
-  The icon is "kb" in Bricolage Grotesque 800, kept quiet (2026-09-26; a cobalt tile was
-  "very in your face"): the tab icon is bare letters that turn navy or cream with the browser
-  theme; favicon.ico and home-screen icons are cream on a navy tile. Made by
+  The icon is "kb" in Bricolage Grotesque 800, kept quiet: the tab icon is a tile that inverts with
+  the browser theme (cream on navy when light, navy on cream when dark); favicon.ico and home-screen
+  icons are cream on navy. A cobalt tile was "very in your face" (2026-09-26); bare letters with no
+  tile were "hard to read" at 16px (2026-10-03). Made by
   `python3 tools/favicon.py` from outlines in `tools/favicon-glyphs.json` (extracted once with
   fontTools; regenerating needs only sips). A favicon can't load web fonts, hence outlines. The
   maskable icon keeps the letters inside Android's safe circle.

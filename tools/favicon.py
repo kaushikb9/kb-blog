@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """The site icon: "kb" in Bricolage Grotesque 800 (Outie's heading face), kept quiet.
 
-The tab icon (icon.svg) is the bare letters, no tile: navy in a light browser, cream in a dark
-one (a prefers-color-scheme rule inside the SVG). KB, 2026-09-26: a cobalt tile was "very in
-your face". Everything that must have a background (favicon.ico for browsers that skip SVG,
-the home-screen icons) is cream letters on a navy tile, the quietest version with a ground.
+The tab icon (icon.svg) is a tile that inverts with the browser theme: cream letters on navy in a
+light browser, navy on cream in a dark one (a prefers-color-scheme rule inside the SVG). History:
+a cobalt tile was "very in your face" (KB, 2026-09-26); bare letters with no tile were "hard to
+read" at 16px (KB, 2026-10-03). favicon.ico and the home-screen icons are cream on navy.
 
     python3 tools/favicon.py      → assets/icon.svg, favicon.ico, apple-touch-icon.png, icon-192/512.png, icon-maskable-512.png
 
@@ -20,7 +20,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 G = json.load(open(os.path.join(ROOT, "tools", "favicon-glyphs.json")))["glyphs"]
 INK, PAPER = "#10173a", "#f1ead8"   # Outie's ink, and its dark-theme type
 
-def svg(height, rx, track=-30, size=64, bare=False):
+def svg(height, rx, track=-30, size=64, bare=False, adaptive=False):
     k, b = G["k"], G["b"]
     s = height / 734.0                       # ascender (720) to overshoot (-14)
     bx = k["adv"] + track
@@ -28,6 +28,10 @@ def svg(height, rx, track=-30, size=64, bare=False):
     tx = (size - (x1 - x0) * s) / 2 - x0 * s
     ty = (size + height) / 2 - 14 * s
     g = lambda d, dx: f'<path transform="translate({tx + dx*s:.2f} {ty:.2f}) scale({s:.5f} {-s:.5f})" d="{d}"/>'
+    if adaptive:  # the tab icon: a tile that inverts with the browser theme, so it reads on light and dark tab bars
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}"><style>rect{{fill:{INK}}}path{{fill:{PAPER}}}'
+                f'@media (prefers-color-scheme:dark){{rect{{fill:{PAPER}}}path{{fill:{INK}}}}}</style>'
+                f'<rect width="{size}" height="{size}" rx="{rx}"/>{g(k["d"], 0)}{g(b["d"], bx)}</svg>')
     if bare:  # letters only; colour follows the browser's theme
         return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}"><style>path{{fill:{INK}}}'
                 f'@media (prefers-color-scheme:dark){{path{{fill:{PAPER}}}}}</style>{g(k["d"], 0)}{g(b["d"], bx)}</svg>')
@@ -40,7 +44,7 @@ def png(svg_text, px, out):
     os.unlink(f.name)
 
 A = lambda n: os.path.join(ROOT, "assets", n)
-tab, tile, large, apple, mask = svg(38, 0, bare=True), svg(34, 14), svg(30, 14), svg(30, 0), svg(24, 0)
+tab, tile, large, apple, mask = svg(36, 12, adaptive=True), svg(36, 12), svg(30, 14), svg(30, 0), svg(24, 0)
 open(A("icon.svg"), "w").write(tab)
 png(apple, 180, A("apple-touch-icon.png"))
 png(large, 192, A("icon-192.png")); png(large, 512, A("icon-512.png"))
