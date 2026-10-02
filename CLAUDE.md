@@ -165,7 +165,11 @@ slides carry the talk, so there are no long write-ups.
   with the same viewer protocol, so a PDF's placeholders and unused pages never
   ship. For the record: Harness = Masterclass pages 1,5,6,8,9 (KB's section plus
   the cover); Scaling CX = skills-journey pages 1,3–6 (2 and 7 are `[XX]`
-  placeholders; KB added the title page, 1, on 2026-10-03). An HTML deck: it strips
+  placeholders; KB added the title page, 1, on 2026-10-03), with the product names blurred
+  (KB, 2026-10-03): `--titles "Yogi: The AI Journey|The Evolution — 5 Phases, 1 Destination|Skills Architecture — How It Works|Horizontal vs Vertical Skills|The Replicable Playbook" --blur "Settlements? (On-Hold|Status|Config|Recon)" --blur "Refund Processing" --blur "Payments" --blur "Settlements"`.
+  `--blur <regex>` (PDF decks) finds the matching words with `pdftotext -bbox-layout` and blurs
+  just those boxes on the page image, via `tools/deck-blur.mjs` (headless Chromium from the
+  shared `~/Code/node_modules/playwright`). It refuses if a pattern matches nothing. An HTML deck: it strips
   speaker notes, drops named slides (`--drop 2,3`), removes extra matches
   (`--cut <regex>`), renumbers, and adds the embed shim that talks to the
   viewer. It refuses when the deck's shape surprises it. Sources stay in

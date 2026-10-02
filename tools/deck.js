@@ -20,17 +20,23 @@ const [src, out, ...rest] = process.argv.slice(2);
 if (!src || !out) { console.error("usage: node tools/deck.js <source.html> <out.html> [--drop 2,3] [--cut <regex>]"); process.exit(1); }
 const drop = new Set();
 const cuts = [];
+const blurs = []; // PDF only: words to blur on the rendered pages (KB, 2026-10-03: product names)
 for (let i = 0; i < rest.length; i++) {
   if (rest[i] === "--drop") rest[++i].split(",").forEach((n) => drop.add(+n));
   else if (rest[i] === "--cut") cuts.push(new RegExp(rest[++i], "gs"));
+  else if (rest[i] === "--blur") blurs.push(new RegExp(rest[++i], "i"));
 }
 const die = (msg) => { console.error(`deck.js: ${msg}`); process.exit(1); };
 
 // A PDF deck (exported slides, often image-only) → an image deck that speaks the
 // same protocol to the viewer. Only the pages named by --pages are rendered, so a
 // subset is the default, and the PDF's text never ships (placeholders, notes).
-//   node tools/deck.js <deck.pdf> content/talks/<slug>/slides.html --pages 1,5,6 [--titles "A|B|C"]
+//   node tools/deck.js <deck.pdf> content/talks/<slug>/slides.html --pages 1,5,6 [--titles "A|B|C"] [--blur <regex>]…
 // Titles feed the viewer's rail; without --titles each page's first line of text is used.
+// --blur finds every text line on the chosen pages that matches (pdftotext -bbox-layout), blurs
+// those boxes on the rendered image, and refuses if a pattern matches nothing. The blur runs in
+// headless Chromium (~/Code/node_modules/playwright, shared across repos), because the image
+// edit needs a canvas and nothing else here has one. Image-only pages have no text to match.
 if (/\.pdf$/i.test(src)) {
   const path = require("path");
   const { execFileSync } = require("child_process");
@@ -51,8 +57,35 @@ if (/\.pdf$/i.test(src)) {
     const text = execFileSync("pdftotext", ["-f", p, "-l", p, src, "-"].map(String)).toString().split("\n").map((x) => x.trim()).find(Boolean) || "";
     const title = given[k] || text;
     if (!title) die(`page ${p} has no text to title it; pass --titles`);
-    return { img: `${name}.jpg`, title };
+    return { img: `${name}.jpg`, title, page: p };
   });
+  if (blurs.length) {
+    const hits = blurs.map(() => 0), jobs = [];
+    for (const s of slides) {
+      const xml = execFileSync("pdftotext", ["-bbox-layout", "-f", s.page, "-l", s.page, src, "-"].map(String)).toString();
+      const pw = +xml.match(/<page width="([\d.]+)"/)[1], ph = +xml.match(/<page[^>]* height="([\d.]+)"/)[1];
+      const rects = [];
+      for (const line of xml.match(/<line[^>]*>[\s\S]*?<\/line>/g) || []) {
+        const words = [...line.matchAll(/<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)<\/word>/g)];
+        let at = 0; const spans = words.map((w) => { const a = at; at += w[5].length + 1; return [a, a + w[5].length]; });
+        const text = words.map((w) => w[5]).join(" ");
+        blurs.forEach((re, b) => {
+          for (const m of text.matchAll(new RegExp(re.source, "gi"))) { // only the matched words, not the whole line
+            const ws = words.filter((w, k) => spans[k][0] < m.index + m[0].length && spans[k][1] > m.index);
+            if (!ws.length) continue;
+            hits[b]++;
+            rects.push({ x0: Math.min(...ws.map((w) => +w[1])) / pw, y0: Math.min(...ws.map((w) => +w[2])) / ph,
+                         x1: Math.max(...ws.map((w) => +w[3])) / pw, y1: Math.max(...ws.map((w) => +w[4])) / ph });
+          }
+        });
+      }
+      if (rects.length) jobs.push({ file: path.join(dir, s.img), rects });
+      if (rects.length) s.title = blurs.reduce((t, re) => t.replace(new RegExp(re.source, "gi"), "…"), s.title);
+    }
+    blurs.forEach((re, b) => { if (!hits[b]) die(`--blur ${re.source}: matched no text on pages ${pages.join(",")}`); });
+    const blurScript = path.join(__dirname, "deck-blur.mjs");
+    execFileSync("node", [blurScript, JSON.stringify(jobs)], { stdio: "inherit" });
+  }
   fs.writeFileSync(out, `<!doctype html>
 <html lang="en">
 <head>
@@ -104,7 +137,7 @@ ${slides.map((s, k) => `<section class="slide${k ? "" : " on"}" id="s${k + 1}" d
 </html>
 `);
   const kb = fs.readdirSync(dir).filter((f) => /^slide-\d+\.jpg$/.test(f)).reduce((a, f) => a + fs.statSync(path.join(dir, f)).size, 0) >> 10;
-  console.log(`deck.js: pages ${pages.join(",")} of ${total} → ${out} + ${slides.length} images (${kb} KB)`);
+  console.log(`deck.js: pages ${pages.join(",")} of ${total} → ${out} + ${slides.length} images (${kb} KB)${blurs.length ? `, blurred: ${blurs.map((r) => r.source).join(" · ")}` : ""}`);
   slides.forEach((s, k) => console.log(`  ${k + 1}. ${s.title}`));
   process.exit(0);
 }
