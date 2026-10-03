@@ -291,9 +291,10 @@ the Free plan, which has what these need.
   Managed Challenge on everyone but search and link previews; KB saw the "Verify you are
   human" box on every visit (in-app browsers drop the clearance cookie), and so would
   anyone tapping a talk from a tweet. Now people never see a challenge.
-- **Block AI bots** (zone kaushik.sh → Security → Bots): on, site-wide. It catches the
-  AI scrapers that are not verified bots. **Challenge Passage** (Security → Settings):
-  30 days, for any challenge Cloudflare still decides to show.
+- **Challenge Passage** (Security → Settings): 30 days, for any challenge Cloudflare
+  still decides to show. **Block AI bots** (catches AI scrapers that are not verified
+  bots): not on yet; KB couldn't find the toggle on 2026-10-03. It lives under Security →
+  Settings (filter "Bot traffic") or the zone's AI Crawl Control page.
 - **Bulk Redirect** (account → Bulk Redirects), list `pagesdev`:
   `kb-blog-44d.pages.dev/` → `https://kaushik.sh/`, 301, with preserve query string,
   include subdomains, subpath matching and preserve path suffix, plus a Bulk
