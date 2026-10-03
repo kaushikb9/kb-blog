@@ -7,6 +7,8 @@ draft: false
 ---
 
 
+_October 2026: I didn't hit 20 posts. Somewhere along the way I started building more than I wrote: small apps made with AI agents, and this site itself, which now changes its whole look every few months. The writing is catching up. Meanwhile, here's [what I built](/projects/)._
+
 Welcome to my corner of the internet! After experimenting with platforms like Medium and Substack, I've decided to move my blog to a new platform yet again. I've enjoyed engaging on Twitter for nearly a decade, but the recent surge in toxicity and the dominance of influence-driven content have spurred me to seek a space where I can freely express my thoughts, free of algorithms dictating engagement.
 
 So, I finally purchased my domain and it just felt right that I need to host my own content. My goal is to use this platform as a journal and make writing a habit, aiming for at least two posts per month and striving for a total of 20 posts by the end of 2024.
