@@ -97,6 +97,9 @@ into HTML and CSS. The split was proven by porting the existing design into
   dir, never `dist/`): ✎ edit button on
   content pages (in any skin), a skin pill bottom-left that opens the same
   page in each skin, and a watch-rebuild on `content/` and `skins/`.
+- `assets/share.png`: the 1200×630 share card every page names as `og:image` (X shows it as a
+  large card). Drawn from the live skin's hero, lede and day portrait by `node tools/share-card.js`
+  (headless Chromium, as `deck-blur.mjs`); rerun it after a skin swap or a new lede.
 - `assets/`: shared icons + manifest + `deck-viewer.js` (the CSS belongs to each skin).
   The icon is "kb" in Bricolage Grotesque 800, kept quiet: the tab icon is a tile that inverts with
   the browser theme (cream on navy when light, navy on cream when dark); favicon.ico and home-screen
@@ -324,7 +327,7 @@ and leave the live look to KB.
   headshots are arriving in ~/Code/me/round-*; round 4 comes in light/dark
   pairs made for presets. C3/C4 post pages were built without a mockup by
   KB's call (2026-09-26): judge them in the dev preview.
-- A per-skin `og:image` (the portrait as the share card).
+- A per-skin or per-post `og:image`. One site-wide card exists since 2026-10-03 (see `assets/share.png`).
 - Projects thumbnails for kaizen and brain: KB supplies sanitised PNGs; never
   capture them from a paired session.
 - Talks in the feed (a published talk as an RSS item). Out by KB's call, 2026-09-26.
