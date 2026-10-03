@@ -261,24 +261,29 @@ ${kinds.length > 1 ? FILTER : ""}`,
 function projects(ctx) {
   const { site, h, u } = ctx;
   const P = site.projects;
-  const tile = (e) => {
-    const ext = (href, text) => href.startsWith("/") ? `<a href="${u(href)}">${h.esc(text)} →</a>`
-      : `<a href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
-    const links = [e.url ? ext(e.url, e.label || "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
-    return `<li><div class="tile">${e.image ? `<img class="shot" src="${u(`/projects/${h.esc(e.image)}`)}" alt="" loading="lazy">` : ""}
-    <div class="body"><span class="rt">${h.esc(e.name)}</span>
-      <span class="sub">${h.esc(e.line)}</span>
-      ${links ? `<span class="links">${links}</span>` : ""}</div></div></li>`;
-  };
-  const section = (label, list) => (list && list.length) ? `
-<section data-section="${label}">
-  <h2 class="list-label">${label}</h2>
-  <ol class="projects">${list.map(tile).join("\n")}</ol>
-</section>` : "";
+  // the site's own grammar: screenshot ones read like the talks list (framed still · name · line),
+  // the rest like the writing rows, under a pill divider. No boxes around text (2026-10-03: the
+  // old card grid "feels forced with the rest of the theme").
+  const ext = (href, text) => href.startsWith("/") ? `<a href="${u(href)}">${h.esc(text)} →</a>`
+    : `<a href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
+  const links = (e) => [e.url ? ext(e.url, e.label || "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
+  const shown = (P.apps || []).filter((e) => e.image), plain = (P.apps || []).filter((e) => !e.image);
+  const feature = (e) => `<li class="app">
+  <span class="poster"><img src="${u(`/projects/${h.esc(e.image)}`)}" alt="" loading="lazy"></span>
+  <span class="app-body"><span class="rt">${h.esc(e.name)}</span>
+    <span class="snip">${h.esc(e.line)}</span>
+    ${links(e) ? `<span class="links">${links(e)}</span>` : ""}</span></li>`;
+  const small = (e) => `<li class="app-row"><span class="rt">${h.esc(e.name)}</span>
+  <span class="snip">${h.esc(e.line)}</span>${links(e) ? `<span class="links">${links(e)}</span>` : ""}</li>`;
   return {
     title: `${P.title} · ${site.config.title}`, desc: P.tagline,
     body: `<h1 class="page-title">${h.esc(P.title)}</h1>
-<p class="tagline">${h.esc(P.tagline)}</p>${section("apps", P.apps)}`,
+<p class="tagline">${h.esc(P.tagline)}</p>${(P.apps || []).length ? `
+<section data-section="apps">
+${shown.length ? `<ol class="apps">${shown.map(feature).join("\n")}</ol>` : ""}
+${plain.length ? `${shown.length ? `<div class="year"><span>smaller ones</span></div>` : ""}
+<ol class="rows">${plain.map(small).join("\n")}</ol>` : ""}
+</section>` : ""}`,
   };
 }
 

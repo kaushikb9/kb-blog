@@ -71,11 +71,11 @@ into HTML and CSS. The split was proven by porting the existing design into
   skins that set the greeting as a headline), `now.txt` (one plain line, the "now" pill),
   `talks/` (see "Talks" below), `projects.md` (the `/projects/` page: frontmatter `apps:` list IS the
   data, body unused; screenshots in `projects/`, 640×400 PNG, copied to `/projects/`).
-  It is a two-column gallery of card tiles: screenshot on top · name · one
-  line · links (`url` → "open", `repo` → "github", public repos only),
-  nothing else (rows, audience chips and "since" years were built and cut on
-  2026-09-19 — the tagline carries who each is for). A tile without links
-  has no link row; without `image` it is text-only — a section with an
+  In Outie it borrows the site's own grammar (2026-10-03; the card grid "felt forced"): apps
+  with a screenshot read like the talks list (framed still · name · one line · links), the
+  rest like the writing rows under a "smaller ones" pill. Links: `url` → "open", `repo` →
+  "github", public repos only; nothing else (audience chips and "since" years were built and
+  cut on 2026-09-19 — the tagline carries who each is for). A section with an
   empty list is not emitted.
 - `build.js` (entry, deps: marked + gray-matter): reads `site.json`, renders the
   live skin at `/`, each past skin at `/skins/<name>/`, then the feed and

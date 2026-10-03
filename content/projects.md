@@ -4,8 +4,8 @@ tagline: Apps I built for my everyday use. Some are open; some are built just fo
 # Each app row: name, line required; url, repo (public GitHub only), image optional. image lives in content/projects/.
 apps:
   # Order: what a stranger can use or would be curious about first, then the ones built for
-  # friends, family or just me (KB, 2026-10-03). Tiles sit in pairs, so keep screenshot tiles
-  # together and text-only tiles together: a mixed pair stretches the text tile into an empty box.
+  # friends, family or just me (KB, 2026-10-03). Apps with an image lead the page; the rest
+  # follow as plain rows under "smaller ones", each group in this order.
   # A private repo gets no github link. `label` renames the url link (default "open").
   - name: attic
     line: Clears duplicates and retakes out of Apple Photos and picks the best of every trip. Nothing leaves your Mac.
