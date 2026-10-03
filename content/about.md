@@ -5,9 +5,8 @@ url: "/about/"
 ShowReadingTime: false
 ---
 
+I'm Kaushik, an engineer / operator in Bangalore who likes building things: systems, teams, and a few side-projects. I lead AI Platforms at Razorpay.
 
-Welcome to my own little space on the internet. I take deep interest in all things startups, engineering, football and outdoors.
+Outside work it's football (and too much FPL), hikes around Bangalore, and this site, which changes its look every few months.
 
-I have been part of a few interesting companies, where I led teams working on a wide range of engineering problems, from building products for PMF to serving millions of requests every day. I am currently an Associate Director of Engineering at Razorpay, one of India's largest fintech companies.
-
-You can reach out to me on [Twitter](https://twitter.com/kaushikb9).
+Say hi on [X](https://twitter.com/kaushikb9), [LinkedIn](https://www.linkedin.com/in/kaushikbhat/) or [GitHub](https://github.com/kaushikb9).
