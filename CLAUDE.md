@@ -272,8 +272,32 @@ npm run deploy   # = ./check.sh && npx wrangler pages deploy dist --project-name
 ```
 
 Static-only (no functions/), so no bundle gotcha here — but run from repo
-root anyway. The pages.dev alias lags a deploy ~10-30s and caches hard;
-cache-bust when verifying.
+root anyway. Verify on `https://kaushik.sh/...?cb=<n>`: since 2026-10-03
+pages.dev and the per-deploy preview addresses 301 to kaushik.sh (below),
+and the live site lags a deploy ~10-30s and caches hard.
+
+### Cloudflare settings that live outside this repo (applied by KB, 2026-10-03)
+
+Both are dashboard settings; nothing in the code sets them. Both domains are on
+the Free plan, which has what these need.
+
+- **WAF custom rule** (zone kaushik.sh → Security → WAF → Custom rules), named
+  `talks: challenge all but search`, action **Managed Challenge**:
+  `(starts_with(http.request.uri.path, "/talks")) and not (cf.verified_bot_category in {"Search Engine Crawler" "Page Preview"})`.
+  Why: KB doesn't want the talks scraped by bots or AI crawlers; search engines
+  and link previews (Slack, LinkedIn, X) still pass. It covers the list, each
+  talk and the decks. The rest of the site is open.
+- **Bulk Redirect** (account → Bulk Redirects), list `pagesdev`:
+  `kb-blog-44d.pages.dev/` → `https://kaushik.sh/`, 301, with preserve query string,
+  include subdomains, subpath matching and preserve path suffix, plus a Bulk
+  Redirect Rule using that list. Why: the pages.dev address skips the zone WAF.
+
+Expected from outside: `curl -sI https://kaushik.sh/talks/` → `403` with
+`cf-mitigated: challenge` (a fake Googlebot user agent too); the home page, posts and
+`/index.xml` → `200`; `kb-blog-44d.pages.dev/<path>?q` → `301` to the same path on
+kaushik.sh. **Agents can't see live `/talks/`.** The built-in browser gets the "Verify you
+are human" box, and an agent must never solve a CAPTCHA. Check talks in `npm run dev`
+and leave the live look to KB.
 
 ## History worth knowing
 
