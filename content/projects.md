@@ -12,18 +12,23 @@ apps:
     url: https://antifeed.pages.dev
     repo: https://github.com/kaushikb9/antifeed
     image: antifeed.png
+    image_dark: antifeed-dark.png
   - name: jot
     line: Notes and todos as plain Markdown files, with an outline view and a capture box one keystroke away. Mac.
+    image: jot.png
+    image_dark: jot-dark.png
   - name: attic
     line: Clears duplicates and retakes out of Apple Photos and picks the best of every trip. Nothing leaves your Mac.
     url: https://github.com/kaushikb9/attic/releases/latest
     label: download
     repo: https://github.com/kaushikb9/attic
     image: attic.png
+    image_dark: attic-dark.png
   - name: five-a-side
     line: One page of football and FPL a day, written for five friends.
     url: https://fiveaside.pages.dev
     image: fiveaside.png
+    image_dark: fiveaside-dark.png
   - name: this site
     line: Hand-built, no framework, and mostly edited by agents. A few parts of it are small projects of their own.
     repo: https://github.com/kaushikb9/kb-blog
