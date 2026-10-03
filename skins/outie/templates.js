@@ -127,7 +127,6 @@ function home(ctx) {
       <a href="https://twitter.com/kaushikb9">twitter</a>
       <a href="https://www.linkedin.com/in/kaushikbhat/">linkedin</a>
       <a href="https://github.com/kaushikb9">github</a>
-      <a href="/index.xml">rss</a>
     </p>
   </div>
   ${portrait(ctx, "portrait", "Kaushik, illustrated")}
