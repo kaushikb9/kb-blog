@@ -90,7 +90,11 @@ into HTML and CSS. The split was proven by porting the existing design into
 - `tools/skin.js` (`npm run skin -- <name>`), `tools/portraits.js`
   (`npm run portraits`: copies each skin's chosen portraits in from `~/Code/me`,
   web-sized with macOS sips. The choice lives in the skin's `skin.json`, and
-  `-- --suggest` lists what `me` would change), `tools/deck.js`
+  `-- --suggest` lists what `me` would change), `tools/showcase.js` (`npm run showcase`:
+  copies each projects.md app's `showcase:` repo previews, `~/Code/<repo>/showcase/light.png` and
+  `dark.png`, to content/projects/<repo>.png and -dark.png at 960×600 with sips, and lists where
+  that repo's showcase.json differs from projects.md. Contract: ~/Code/brain/design-system/SHOWCASE.md.
+  The repos are read-only and the build never reads them; KB's wording and order in projects.md win), `tools/deck.js`
   (a talk deck → its scrubbed, embeddable copy; see "Talks").
 - `dev.js`: LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654 builds with `--preview --out .dev` (its own

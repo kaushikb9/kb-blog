@@ -152,6 +152,7 @@ test("projects.md: every row has a name and a line; links are https; images exis
     if (e.url) assert.match(e.url, /^(https:\/\/|\/)/, `${who}: url must be absolute https or a path on this site, got ${e.url}`);
     if (e.repo) assert.match(e.repo, /^https:\/\/github\.com\//, `${who}: repo must be a github.com URL, got ${e.repo}`);
     for (const k of ["image", "image_dark"]) if (e[k]) assert.ok(fs.existsSync(path.join(ROOT, "content", "projects", e[k])), `${who}: ${k} content/projects/${e[k]} does not exist`);
+    if (e.showcase) assert.match(e.showcase, /^[a-z0-9-]+$/, `${who}: showcase must be a repo dir name under ~/Code`);
     if (e.image_dark) assert.ok(e.image, `${who}: image_dark without image`);
     for (const f of e.features || []) {
       assert.ok(f.name && f.line, `${who}: a feature needs a name and a line`);
