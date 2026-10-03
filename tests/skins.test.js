@@ -164,6 +164,11 @@ describe("preview: every other skin at /skins/<name>/, dev only", () => {
     }
   });
 
+  test("KB's own extras show up in the preview: a talk with slides and a photo keeps its From the day card", () => {
+    const t = lib.talksOnDisk().find((x) => x.fm.slides && x.fm.poster);
+    if (t) assert.ok(d.read(`${t.url}index.html`).includes("only you see this"), `${t.url} has no From the day card in the preview`);
+  });
+
   test("no page under /skins/<name>/ is in the sitemap (the /skins/ index itself may be)", () => {
     assert.ok(!/\/skins\/[a-z0-9-]+\//.test(d.read("/sitemap.xml")), "sitemap lists a preview or archived page");
   });
