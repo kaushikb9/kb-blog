@@ -239,7 +239,7 @@ a.row:hover .rt { color: var(--gold); }
   .section-head { margin-top: 56px; }
   .latest { grid-template-columns: 1fr; padding: 24px 22px; }
   .latest .ex { font-size: 17px; }
-  .row { padding: 14px 0; }
+  .row { padding: 14px 0; flex-direction: column; align-items: flex-start; gap: 4px; } /* date always under the title: wrapping made it sit beside short titles and under long ones (2026-10-03) */
   .row .meta { font-size: 15px; }
   .projects { grid-template-columns: 1fr; }
   .post-head { padding: 28px 22px 30px; border-radius: 0 0 26px 26px; margin: 0 -16px; }
