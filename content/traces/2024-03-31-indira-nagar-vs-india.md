@@ -12,7 +12,7 @@ Yesterday was Ugadi / Gudi Padwa (and many other spring festivals across India).
 
 Meanwhile, a quiet escalation was unfolding at work. One of our customers saw a massive traffic spike on their app. Escalations started coming in. Turns out, the app helps people create image creatives for WhatsApp — the kind you see in family groups wishing “Good Morning” and “Happy Diwali”.
 
-What surprised me: this app sees serious volumes. It serves a real need. And most people I know have probably never heard of it. Almost like a Canva — but built for the real India that most of us in the tech world dont know much about.
+What surprised me: this app sees serious volumes. It serves a real need. And most people I know have probably never heard of it. Almost like a Canva — but built for the real India that most of us in the tech world don’t know much about.
 
 I found myself saying:
-> *Indira Nagar is rooting for "that" shiny app. The rest of India is running their business on Whatsapp*
+> *Indira Nagar is rooting for "that" shiny app. The rest of India is running their business on WhatsApp*

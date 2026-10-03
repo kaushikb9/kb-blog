@@ -6,6 +6,9 @@ const path = require("path");
 const matter = require("gray-matter");
 const { marked } = require("marked");
 const { words } = require("./util");
+// Every image after a page's first loads lazily: the first may be on screen at
+// load, the rest (screenshots, diagrams) would otherwise all download up front.
+const lazyImages = (html) => { let n = 0; return html.replace(/<img /g, (m) => n++ ? '<img loading="lazy" decoding="async" ' : m); };
 
 const SITE = {
   base: "https://kaushik.sh",
@@ -60,7 +63,7 @@ function load(ROOT, opts = {}) {
       by: g.data.by || "",
       description: g.data.description || "",
       minutes: Math.max(1, Math.round(words(g.content) / 200)),
-      html: marked.parse(g.content),
+      html: lazyImages(marked.parse(g.content)),
       assets,
       draft: g.data.draft === true,
       // talks only: where it was given, and what exists beside the page (each optional)

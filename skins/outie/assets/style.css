@@ -215,7 +215,7 @@ main.wrap { flex: 1; }
 .prose pre { background: var(--card); border: 2px solid var(--line); border-radius: 16px; padding: 16px 18px; overflow-x: auto; }
 .prose pre code { background: none; padding: 0; }
 .prose hr { border: none; border-top: 2px solid var(--line); margin: 2em 0; }
-.prose table { border-collapse: collapse; font-size: 0.9em; }
+.prose table { border-collapse: collapse; font-size: 0.9em; display: block; max-width: 100%; overflow-x: auto; }
 .prose th, .prose td { border-bottom: 1px solid var(--line); padding: 6px 10px; text-align: left; }
 .post-tags { display: flex; flex-wrap: wrap; gap: 8px; max-width: 680px; margin: 40px auto 0; }
 
