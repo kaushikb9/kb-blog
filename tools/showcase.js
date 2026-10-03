@@ -39,6 +39,7 @@ for (const app of apps.filter((a) => a.showcase)) {
   if (app.image_dark !== dark) { notes++; console.log(`  projects.md image_dark is ${app.image_dark}; set it to ${dark}`); }
   // KB's wording wins; these are suggestions only
   for (const k of ["line", "url", "repo"]) {
+    if (k === "url" && facts.url === "https://kaushik.sh") continue; // the site itself: a link to the page you are on
     if (facts[k] && app[k] !== facts[k] && !(k === "url" && app.url && app.url.startsWith("/"))) {
       notes++; console.log(`  ${k}: projects.md has ${JSON.stringify(app[k])}; showcase has ${JSON.stringify(facts[k])}`);
     }
