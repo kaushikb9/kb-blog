@@ -58,6 +58,11 @@ test("the deployed build carries no preview skins (those are dev-only)", () => {
     assert.ok(!fs.readFileSync(f, "utf8").includes(`data-frame="preview"`), `${rel(f)} is a preview page — build.js --preview must never deploy`);
 });
 
+test("the deployed build carries none of KB's own extras (the talk-day photo card is dev preview only)", () => {
+  for (const f of html)
+    assert.ok(!fs.readFileSync(f, "utf8").includes("only you see this"), `${rel(f)} shows a dev-preview-only extra`);
+});
+
 test("RSS: every GUID is its permalink, absolute, and a real page", () => {
   assert.ok(items.length > 0, "feed has no items");
   for (const it of items) {
@@ -185,6 +190,28 @@ test("a draft (draft: true) never ships: no page, no feed entry, no sitemap line
 });
 
 // ---- talks (/talks/, since 2026-09-26): a list with a blurb per talk, a page led by the slides ----
+
+// a JPEG's pixel size and whether it carries EXIF/XMP (APP1), read from its markers
+const jpegInfo = (buf) => {
+  let i = 2, app1 = false;
+  while (i < buf.length) {
+    const m = buf[i + 1], len = buf.readUInt16BE(i + 2);
+    if (m === 0xe1) app1 = true;
+    if (m >= 0xc0 && m <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(m)) return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5), app1 };
+    i += 2 + len;
+  }
+  return { app1 };
+};
+
+test("a talk's photo ships as a small thumbnail with no metadata (KB, 2026-10-03: privacy, given bots and agents)", () => {
+  for (const t of lib.talksOnDisk(true)) {
+    if (!t.fm.poster || t.fm.video) continue; // a video's poster is its public YouTube still
+    const f = path.join(t.dir, t.fm.poster), who = `content/talks/${t.slug}/${t.fm.poster}`;
+    const { w, app1 } = jpegInfo(fs.readFileSync(f));
+    assert.ok(w && w <= 400, `${who} is ${w}px wide; shrink it: convert in.jpg -resize 400x -strip -quality 82 out.jpg`);
+    assert.ok(!app1, `${who} carries EXIF/XMP; strip it (convert -strip)`);
+  }
+});
 
 test("every published talk has a title, date, where, a real blurb, and slides or a video", () => {
   for (const t of lib.talksOnDisk()) {

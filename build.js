@@ -46,7 +46,7 @@ function build(opts = {}) {
   R.copyDir(path.join(ROOT, "static"), out);
   R.copyDir(path.join(ROOT, "assets"), out);
 
-  const common = { ROOT, site, tags, history, out };
+  const common = { ROOT, site, tags, history, out, mine: !!opts.preview }; // mine: KB's own extras, dev preview only
   let pages = R.renderSkin({ ...common, skin: liveSkin, prefix: "", frame: null });
   for (const x of framed)
     pages += R.renderSkin({ ...common, skin: x.loaded, prefix: `/skins/${x.skin}`, frame: x.frame });
