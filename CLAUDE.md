@@ -301,7 +301,8 @@ the Free plan, which has what these need.
   Redirect Rule using that list. Why: the pages.dev address skips the zone WAF.
 
 Expected from outside: `curl -sI https://kaushik.sh/talks/` → `200`, and the same with
-`-A GPTBot` → `403`; the home page, posts and `/index.xml` → `200`;
+`-A GPTBot` → `200` too (a borrowed user agent is not a *verified* bot; only the real
+crawlers, from their own IPs, match the rule); the home page, posts and `/index.xml` → `200`;
 `kb-blog-44d.pages.dev/<path>?q` → `301` to the same path on kaushik.sh. If an agent's
 browser ever gets a "Verify you are human" box, it must never solve it: check talks in
 `npm run dev` and leave the live look to KB.
