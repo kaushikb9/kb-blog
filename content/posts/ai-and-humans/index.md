@@ -37,7 +37,7 @@ These are classic LLM-friendly problems. There is a clear set of data or logic. 
 - "I am unable to understand the documentation"  
 - "What does this dashboard metric mean?"
 
-The AI gets it right often enough but sometimes it can afford to do small mistakes. These are low-risk, high-reward. Here are some more examples that can do well for improving dev experience:
+The AI gets it right often enough but sometimes it can afford to make small mistakes. These are low-risk, high-reward. Here are some more examples that can do well for improving dev experience:
 
 - Auto-generating PR descriptions based on code diffs  
 - Writing quick integration tests from function signatures  
@@ -70,7 +70,7 @@ Even if AI can give the right answer, it might escalate things further. The issu
 
 ### The hard truth
 
-Most problems feel like they should sit in the 1st, 3rd or the 4th quadrant - but they often end up in the 2nd quadrant aka **The Judgement Zone** due to missing context. Imagine a customer asking a straightforward question but the AI gives a templated answer or asks for more details like a screenshot or logs or worse - *replicate the scenario*. The customer is already frustrated and now they have to do more tasks to get their issue resolve. If that context was pre-fetched, the same problem could have easily been handled in one of the other quadrants.
+Most problems feel like they should sit in the 1st, 3rd or the 4th quadrant - but they often end up in the 2nd quadrant aka **The Judgment Zone** due to missing context. Imagine a customer asking a straightforward question but the AI gives a templated answer or asks for more details like a screenshot or logs or worse - *replicate the scenario*. The customer is already frustrated and now they have to do more tasks to get their issue resolved. If that context was pre-fetched, the same problem could have easily been handled in one of the other quadrants.
 
 While I was writing this post, a talk [by Andrej Karpathy](https://youtu.be/LCEmiRjPEtQ?si=e_TVa6I6WZVOlrru) was doing the rounds. It reinforced a few things we have been seeing on the ground, especially around the role of AI agents and the importance of context. He talks about AI agents as the next layer of abstraction and how chaining tools and memory into them is what makes them powerful. He also makes a great point about designing for LLMs, not just using them as a drop-in replacement for humans. In other words: don’t just give the model a messy interface or complex tool and expect magic - build clean, clear scaffolds around the model’s strengths. That resonates with our experience too. Problems in the **LLM Sweet Spot** work well because we’ve shaped the inputs and constraints to help the model succeed. He also talks about human-in-the-loop where we need to design systems where users can verify, edit, and guide the AI.
 

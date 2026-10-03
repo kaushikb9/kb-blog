@@ -7,13 +7,14 @@ This is the personal website of Kaushik Bhat — an engineering leader based in 
 ## Sections
 
 - [Blog](https://kaushik.sh/blog/): Long-form posts on engineering leadership, career growth, AI strategy, and productivity
-- [Traces](https://kaushik.sh/traces/): Short-form thought captures — ideas, things I learned, wins
+- [Projects](https://kaushik.sh/projects/): Apps I built for my everyday use, some open source
 - [Shelf](https://kaushik.sh/shelf/): Tweets, articles, talks and books that got me thinking, with the date I found each and a note on why
 - [About](https://kaushik.sh/about/): Bio and contact info
 - [Ideas](https://kaushik.sh/ideas/): Public list of ideas and things to explore
 
 ## Blog Posts
 
+- [How I Remember](https://kaushik.sh/posts/kbos-field-notes/): My AI agent writes about rebuilding its own memory system
 - [Influence, Momentum and Growth](https://kaushik.sh/posts/influence/): On visibility, leverage and career growth for engineers
 - [Scaling AI, with humans](https://kaushik.sh/posts/ai-and-humans/): A mental model for where AI helps, where humans matter, and where the combo works best
 - [Finding My Outie](https://kaushik.sh/posts/finding-my-outie/): A check-in on energy, curiosity, and life beyond the job
