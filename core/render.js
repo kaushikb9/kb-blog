@@ -66,6 +66,8 @@ const iconV = (ROOT, f) => {
 // at the live URL, so an archived copy never competes with the real page.
 function head(ROOT, site, pg, url, archived) {
   const S = site.config;
+  // The share card (tools/share-card.js), hashed so X and LinkedIn refetch a new one.
+  const share = fs.existsSync(path.join(ROOT, "assets", "share.png")) ? iconV(ROOT, "share.png") : "";
   return `<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${h.esc(pg.title)}</title>
@@ -73,8 +75,15 @@ function head(ROOT, site, pg, url, archived) {
 <meta property="og:title" content="${h.esc(pg.title)}">
 <meta property="og:description" content="${h.esc(pg.desc || S.desc)}">
 <meta property="og:url" content="${S.base}${url}">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
+<meta property="og:type" content="${/^\/posts\/[^/]+\/$/.test(url) ? "article" : "website"}">
+<meta property="og:site_name" content="${h.esc(S.title)}">${share ? `
+<meta property="og:image" content="${S.base}/${share}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${h.esc(S.title)}, kaushik.sh">
+<meta name="twitter:card" content="summary_large_image">` : `
+<meta name="twitter:card" content="summary">`}
+<meta name="twitter:creator" content="@kaushikb9">
 <link rel="canonical" href="${S.base}${url}">
 <link rel="alternate" type="application/rss+xml" title="${h.esc(S.title)}" href="/index.xml">
 <link rel="manifest" href="/manifest.webmanifest">

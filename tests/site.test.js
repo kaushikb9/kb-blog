@@ -41,6 +41,18 @@ test("style.css?v= is the hash of the CSS that shipped beside it", () => {
   }
 });
 
+test("the share card a page names (og:image) shipped, at 1200×630", () => {
+  for (const f of html) {
+    const src = fs.readFileSync(f, "utf8");
+    const m = src.match(/property="og:image" content="([^"]+)"/);
+    if (!m) continue; // static passthroughs carry no blog <head>
+    const p = m[1].replace(BASE, "").replace(/\?.*/, "");
+    assert.ok(exists.has(p), `${rel(f)}: og:image ${m[1]} is not in dist/ — the X/LinkedIn card would be blank`);
+    const png = fs.readFileSync(path.join(DIST, p));
+    assert.deepEqual([png.readUInt32BE(16), png.readUInt32BE(20)], [1200, 630], `${p} must be 1200×630 for summary_large_image`);
+  }
+});
+
 test("the deployed build carries no preview skins (those are dev-only)", () => {
   for (const f of html)
     assert.ok(!fs.readFileSync(f, "utf8").includes(`data-frame="preview"`), `${rel(f)} is a preview page — build.js --preview must never deploy`);
