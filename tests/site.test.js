@@ -146,7 +146,12 @@ test("projects.md: every row has a name and a line; links are https; images exis
     assert.ok(e.line, `${who}: no line — say what it is in one sentence`);
     if (e.url) assert.match(e.url, /^(https:\/\/|\/)/, `${who}: url must be absolute https or a path on this site, got ${e.url}`);
     if (e.repo) assert.match(e.repo, /^https:\/\/github\.com\//, `${who}: repo must be a github.com URL, got ${e.repo}`);
-    if (e.image) assert.ok(fs.existsSync(path.join(ROOT, "content", "projects", e.image)), `${who}: image content/projects/${e.image} does not exist`);
+    for (const k of ["image", "image_dark"]) if (e[k]) assert.ok(fs.existsSync(path.join(ROOT, "content", "projects", e[k])), `${who}: ${k} content/projects/${e[k]} does not exist`);
+    if (e.image_dark) assert.ok(e.image, `${who}: image_dark without image`);
+    for (const f of e.features || []) {
+      assert.ok(f.name && f.line, `${who}: a feature needs a name and a line`);
+      if (f.url) assert.match(f.url, /^\//, `${who}: feature ${f.name} must link a path on this site`);
+    }
   }
   assert.ok(!("talks" in projects), "content/projects.md has talks: — talks live in content/talks/<slug>/ since 2026-09-26");
 });

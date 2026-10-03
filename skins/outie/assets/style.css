@@ -166,6 +166,19 @@ main.wrap { flex: 1; }
 .app { display: grid; grid-template-columns: minmax(0, 460px) 1fr; gap: 36px; align-items: center; }
 .app .poster { display: block; overflow: hidden; aspect-ratio: 16 / 10; background: var(--card); border: 2px solid var(--ink); border-radius: 20px; }
 .app .poster img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.app .poster .p-dark { display: none; }
+:root[data-theme="dark"] .app .poster .p-light { display: none; }
+:root[data-theme="dark"] .app .poster .p-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .app .poster .p-light { display: none; }
+  :root:not([data-theme="light"]) .app .poster .p-dark { display: block; }
+}
+.features { list-style: none; padding: 0; margin: 6px 0 2px; display: flex; flex-direction: column; gap: 8px; }
+.features li { display: grid; grid-template-columns: 92px 1fr; gap: 12px; align-items: baseline; font-size: 16px; line-height: 1.45; }
+.features a, .features b { font-weight: 800; color: var(--gold); text-decoration: none; }
+.features b { color: var(--ink); }
+.features a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.features span { color: var(--muted); }
 .app-body { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
 .app .rt { font-size: clamp(30px, 3.6vw, 44px); font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
 .app .snip { color: var(--muted); font-size: 20px; line-height: 1.45; max-width: 30em; }

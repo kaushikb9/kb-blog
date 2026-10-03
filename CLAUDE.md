@@ -70,7 +70,7 @@ into HTML and CSS. The split was proven by porting the existing design into
   (the bio; optional frontmatter `lede` = the bio minus its greeting, for
   skins that set the greeting as a headline), `now.txt` (one plain line, the "now" pill),
   `talks/` (see "Talks" below), `projects.md` (the `/projects/` page: frontmatter `apps:` list IS the
-  data, body unused; screenshots in `projects/`, 640×400 PNG, copied to `/projects/`).
+  data, body unused; screenshots in `projects/`, 960×600 PNG plus an optional `image_dark` twin shown when the site is dark, copied to `/projects/`).
   In Outie it borrows the site's own grammar (2026-10-03; the card grid "felt forced"): apps
   with a screenshot read like the talks list (framed still · name · one line · links), the
   rest like the writing rows under a "smaller ones" pill. Links: `url` → "open", `repo` →
