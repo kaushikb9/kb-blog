@@ -292,9 +292,9 @@ the Free plan, which has what these need.
   human" box on every visit (in-app browsers drop the clearance cookie), and so would
   anyone tapping a talk from a tweet. Now people never see a challenge.
 - **Challenge Passage** (Security → Settings): 30 days, for any challenge Cloudflare
-  still decides to show. **Block AI bots** (catches AI scrapers that are not verified
-  bots): not on yet; KB couldn't find the toggle on 2026-10-03. It lives under Security →
-  Settings (filter "Bot traffic") or the zone's AI Crawl Control page.
+  still decides to show. **Block AI bots** stays off on purpose: it is
+  site-wide and also writes AI-crawler blocks into the served robots.txt, while the rest
+  of the site invites AI readers (llms.txt, `Allow: /`). Only `/talks` is kept from them.
 - **Bulk Redirect** (account → Bulk Redirects), list `pagesdev`:
   `kb-blog-44d.pages.dev/` → `https://kaushik.sh/`, 301, with preserve query string,
   include subdomains, subpath matching and preserve path suffix, plus a Bulk
