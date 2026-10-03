@@ -70,12 +70,12 @@ into HTML and CSS. The split was proven by porting the existing design into
   (the bio; optional frontmatter `lede` = the bio minus its greeting, for
   skins that set the greeting as a headline), `now.txt` (one plain line, the "now" pill),
   `talks/` (see "Talks" below), `projects.md` (the `/projects/` page: frontmatter `apps:` list IS the
-  data, body unused; screenshots in `projects/`, 640×400 PNG, copied to `/projects/`).
-  It is a two-column gallery of card tiles: screenshot on top · name · one
-  line · links (`url` → "open", `repo` → "github", public repos only),
-  nothing else (rows, audience chips and "since" years were built and cut on
-  2026-09-19 — the tagline carries who each is for). A tile without links
-  has no link row; without `image` it is text-only — a section with an
+  data, body unused; screenshots in `projects/`, 960×600 PNG plus an optional `image_dark` twin shown when the site is dark, copied to `/projects/`).
+  In Outie it borrows the site's own grammar (2026-10-03; the card grid "felt forced"): apps
+  with a screenshot read like the talks list (framed still · name · one line · links), the
+  rest like the writing rows under a "smaller ones" pill. Links: `url` → "open", `repo` →
+  "github", public repos only; nothing else (audience chips and "since" years were built and
+  cut on 2026-09-19 — the tagline carries who each is for). A section with an
   empty list is not emitted.
 - `build.js` (entry, deps: marked + gray-matter): reads `site.json`, renders the
   live skin at `/`, each past skin at `/skins/<name>/`, then the feed and
@@ -90,7 +90,11 @@ into HTML and CSS. The split was proven by porting the existing design into
 - `tools/skin.js` (`npm run skin -- <name>`), `tools/portraits.js`
   (`npm run portraits`: copies each skin's chosen portraits in from `~/Code/me`,
   web-sized with macOS sips. The choice lives in the skin's `skin.json`, and
-  `-- --suggest` lists what `me` would change), `tools/deck.js`
+  `-- --suggest` lists what `me` would change), `tools/showcase.js` (`npm run showcase`:
+  copies each projects.md app's `showcase:` repo previews, `~/Code/<repo>/showcase/light.png` and
+  `dark.png`, to content/projects/<repo>.png and -dark.png at 960×600 with sips, and lists where
+  that repo's showcase.json differs from projects.md. Contract: ~/Code/brain/design-system/SHOWCASE.md.
+  The repos are read-only and the build never reads them; KB's wording and order in projects.md win), `tools/deck.js`
   (a talk deck → its scrubbed, embeddable copy; see "Talks").
 - `dev.js`: LOCAL ONLY (binds 127.0.0.1, writes files; never deploy).
   `node dev.js` → localhost:8654 builds with `--preview --out .dev` (its own
