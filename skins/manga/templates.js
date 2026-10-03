@@ -248,7 +248,7 @@ function projects(ctx) {
   const tile = (e) => {
     const ext = (href, text) => href.startsWith("/") ? `<a href="${u(href)}">${h.esc(text)} →</a>`
       : `<a href="${h.esc(href)}" target="_blank" rel="noopener">${h.esc(text)} ↗</a>`;
-    const links = [e.url ? ext(e.url, "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
+    const links = [e.url ? ext(e.url, e.label || "open") : "", e.repo ? ext(e.repo, "github") : ""].join("");
     return `<li><div class="tile">${e.image ? `<img class="shot" src="${u(`/projects/${h.esc(e.image)}`)}" alt="" loading="lazy">` : ""}
     <div class="body"><span class="rt">${h.esc(e.name)}</span>
       <span class="sub">${h.esc(e.line)}</span>
