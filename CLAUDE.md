@@ -285,22 +285,25 @@ Both are dashboard settings; nothing in the code sets them. Both domains are on
 the Free plan, which has what these need.
 
 - **WAF custom rule** (zone kaushik.sh → Security → WAF → Custom rules), named
-  `talks: challenge all but search`, action **Managed Challenge**:
-  `(starts_with(http.request.uri.path, "/talks")) and not (cf.verified_bot_category in {"Search Engine Crawler" "Page Preview"})`.
-  Why: KB doesn't want the talks scraped by bots or AI crawlers; search engines
-  and link previews (Slack, LinkedIn, X) still pass. It covers the list, each
-  talk and the decks. The rest of the site is open.
+  `talks: block AI bots`, action **Block**:
+  `(starts_with(http.request.uri.path, "/talks")) and (cf.verified_bot_category in {"AI Crawler" "AI Assistant" "AI Search"})`.
+  Why: KB doesn't want the talks scraped by AI crawlers. Until 2026-10-03 it was a
+  Managed Challenge on everyone but search and link previews; KB saw the "Verify you are
+  human" box on every visit (in-app browsers drop the clearance cookie), and so would
+  anyone tapping a talk from a tweet. Now people never see a challenge.
+- **Block AI bots** (zone kaushik.sh → Security → Bots): on, site-wide. It catches the
+  AI scrapers that are not verified bots. **Challenge Passage** (Security → Settings):
+  30 days, for any challenge Cloudflare still decides to show.
 - **Bulk Redirect** (account → Bulk Redirects), list `pagesdev`:
   `kb-blog-44d.pages.dev/` → `https://kaushik.sh/`, 301, with preserve query string,
   include subdomains, subpath matching and preserve path suffix, plus a Bulk
   Redirect Rule using that list. Why: the pages.dev address skips the zone WAF.
 
-Expected from outside: `curl -sI https://kaushik.sh/talks/` → `403` with
-`cf-mitigated: challenge` (a fake Googlebot user agent too); the home page, posts and
-`/index.xml` → `200`; `kb-blog-44d.pages.dev/<path>?q` → `301` to the same path on
-kaushik.sh. **Agents can't see live `/talks/`.** The built-in browser gets the "Verify you
-are human" box, and an agent must never solve a CAPTCHA. Check talks in `npm run dev`
-and leave the live look to KB.
+Expected from outside: `curl -sI https://kaushik.sh/talks/` → `200`, and the same with
+`-A GPTBot` → `403`; the home page, posts and `/index.xml` → `200`;
+`kb-blog-44d.pages.dev/<path>?q` → `301` to the same path on kaushik.sh. If an agent's
+browser ever gets a "Verify you are human" box, it must never solve it: check talks in
+`npm run dev` and leave the live look to KB.
 
 ## History worth knowing
 
