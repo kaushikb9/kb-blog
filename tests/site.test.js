@@ -58,6 +58,11 @@ test("the deployed build carries no preview skins (those are dev-only)", () => {
     assert.ok(!fs.readFileSync(f, "utf8").includes(`data-frame="preview"`), `${rel(f)} is a preview page — build.js --preview must never deploy`);
 });
 
+test("the deployed build carries none of KB's own extras (the talk-day photo card is dev preview only)", () => {
+  for (const f of html)
+    assert.ok(!fs.readFileSync(f, "utf8").includes("only you see this"), `${rel(f)} shows a dev-preview-only extra`);
+});
+
 test("RSS: every GUID is its permalink, absolute, and a real page", () => {
   assert.ok(items.length > 0, "feed has no items");
   for (const it of items) {

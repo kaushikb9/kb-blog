@@ -304,7 +304,8 @@ function talks(ctx) {
 
 function talk(ctx, t) {
   const { site, h, u } = ctx;
-  const photo = t.poster ? `<a class="extra" href="${u(t.url + t.poster)}"><img src="${u(t.url + t.poster)}" alt="" loading="lazy"><span><b>From the day</b><span class="sub">photo · ${h.esc(t.where)}</span></span></a>` : "";
+  // the photo already leads the /talks/ row, so on the page it is KB's keepsake: dev preview only (2026-10-03)
+  const photo = t.poster && ctx.mine ? `<a class="extra" href="${u(t.url + t.poster)}"><img src="${u(t.url + t.poster)}" alt="" loading="lazy"><span><b>From the day</b><span class="sub">photo · ${h.esc(t.where)} · only you see this</span></span></a>` : "";
   const video = t.video && t.slides ? `<a class="extra" href="${h.esc(t.video)}" target="_blank" rel="noopener"><span class="play-ic" aria-hidden="true">▶</span><span><b>Watch the talk</b><span class="sub">video ↗</span></span></a>` : "";
   return {
     title: `${t.title} · ${site.config.title}`, desc: t.description,

@@ -152,7 +152,9 @@ slides carry the talk, so there are no long write-ups.
   reader to go check the details" (KB, same day). check.sh rejects a
   published talk whose description is under 80 characters or says "to come".
 - **The page**: kicker · title · the blurb as lede, then **the slides inline**,
-  then only what exists (a "Watch the talk" card if `video:`, the photo). No
+  then only what exists (a "Watch the talk" card if `video:`). The "From the day" photo
+  card shows only in the dev preview (`ctx.mine`, KB 2026-10-03: the photo already leads the
+  /talks/ row, so on the page it was a keepsake for him, not the reader). check.sh holds it. No
   slides but a video → the video's still with a play mark leads the page and
   opens YouTube (`ctx.talk.video`; JSFoo 2014). Neither → the photo.
 - **The viewer**: markup from `core/talk.js` (`ctx.talk.deck(t)`; every skin
